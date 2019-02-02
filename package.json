@@ -1,0 +1,20 @@
+{
+  "name": "bejeweled",
+  "version": "0.0.1",
+  "description": "Bejeweled",
+  "scripts": {
+    "build": "npm run lint && webpack --mode=production",
+    "lint": "standard",
+    "start": "webpack-dev-server --mode=development"
+  },
+  "dependencies": {
+    "phaser": "3.15.1"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "3.2.0",
+    "standard": "12.0.1",
+    "webpack": "4.29.0",
+    "webpack-cli": "3.2.1",
+    "webpack-dev-server": "3.1.14"
+  }
+}
