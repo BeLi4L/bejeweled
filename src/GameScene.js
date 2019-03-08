@@ -70,6 +70,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   async onPointerDown (pointer) {
+    if (this.moveInProgress) {
+      return
+    }
+
     const pointedCell = this.getCellAt(pointer)
 
     if (this.selectedCell == null) {
@@ -90,6 +94,8 @@ export default class GameScene extends Phaser.Scene {
       return
     }
 
+    this.moveInProgress = true
+
     await this.swapCells(firstCell, secondCell)
 
     await this.moveSpritesWhereTheyBelong()
@@ -106,6 +112,8 @@ export default class GameScene extends Phaser.Scene {
       await this.swapCells(firstCell, secondCell)
       await this.moveSpritesWhereTheyBelong()
     }
+
+    this.moveInProgress = false
   }
 
   async makeCellsFall () {
