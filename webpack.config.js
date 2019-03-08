@@ -2,7 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
   output: {
     // filename: '[name].[contenthash].js',
     filename: '[name].js',
@@ -14,6 +14,18 @@ module.exports = {
       inject: 'body'
     })
   ],
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.json']
+  },
   optimization: {
     splitChunks: {
       chunks: 'all'

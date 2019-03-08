@@ -33,71 +33,6 @@ declare type GridAlignConfig = {
     y?: number;
 };
 
-declare type JSONAnimationManager = {
-    /**
-     * An array of all Animations added to the Animation Manager.
-     */
-    anims: JSONAnimation[];
-    /**
-     * The global time scale of the Animation Manager.
-     */
-    globalTimeScale: number;
-};
-
-declare type GenerateFrameNamesConfig = {
-    /**
-     * The string to append to every resulting frame name if using a range or an array of `frames`.
-     */
-    prefix?: string;
-    /**
-     * If `frames` is not provided, the number of the first frame to return.
-     */
-    start?: integer;
-    /**
-     * If `frames` is not provided, the number of the last frame to return.
-     */
-    end?: integer;
-    /**
-     * The string to append to every resulting frame name if using a range or an array of `frames`.
-     */
-    suffix?: string;
-    /**
-     * The minimum expected lengths of each resulting frame's number. Numbers will be left-padded with zeroes until they are this long, then prepended and appended to create the resulting frame name.
-     */
-    zeroPad?: integer;
-    /**
-     * The array to append the created configuration objects to.
-     */
-    outputArray?: AnimationFrameConfig[];
-    /**
-     * If provided as an array, the range defined by `start` and `end` will be ignored and these frame numbers will be used.
-     */
-    frames?: boolean;
-};
-
-declare type GenerateFrameNumbersConfig = {
-    /**
-     * The starting frame of the animation.
-     */
-    start?: integer;
-    /**
-     * The ending frame of the animation.
-     */
-    end?: integer;
-    /**
-     * A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`.
-     */
-    first?: boolean | integer;
-    /**
-     * An array to concatenate the output onto.
-     */
-    outputArray?: AnimationFrameConfig[];
-    /**
-     * A custom sequence of frames.
-     */
-    frames?: boolean | integer[];
-};
-
 declare type JSONCameraBounds = {
     /**
      * The horizontal position of camera
@@ -527,7 +462,7 @@ declare type ScaleConfig = {
     /**
      * The zoom value of the game canvas.
      */
-    zoom?: Phaser.Scale.Zoom | integer;
+    zoom?: Phaser.Scale.ZoomType | integer;
     /**
      * The rendering resolution of the canvas. This is reserved for future use and is currently ignored.
      */
@@ -543,7 +478,7 @@ declare type ScaleConfig = {
     /**
      * The scale mode.
      */
-    mode?: Phaser.Scale.ScaleModes;
+    mode?: Phaser.Scale.ScaleModeType;
     /**
      * The minimum width and height the canvas can be scaled down to.
      */
@@ -559,7 +494,7 @@ declare type ScaleConfig = {
     /**
      * Automatically center the canvas within the parent?
      */
-    autoCenter?: Phaser.Scale.Center;
+    autoCenter?: Phaser.Scale.CenterType;
     /**
      * How many ms should elapse before checking if the browser size has changed?
      */
@@ -826,14 +761,6 @@ declare type GameConfig = {
     scale?: ScaleConfig;
 };
 
-declare namespace module {
-    /**
-     * "Computers are good at following instructions, but not at reading your mind." - Donald Knuth
-     */
-    var exports: any;
-
-}
-
 declare type TimeStepCallback = (time: number, average: number, interpolation: number)=>void;
 
 declare type GenerateTextureRendererCallback = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D)=>void;
@@ -1097,60 +1024,6 @@ declare type ColorObject = {
     a: number;
 };
 
-declare namespace Phaser.Display.Color {
-    namespace InterpolateFunctions {
-        /**
-         * Interpolates between the two given color ranges over the length supplied.
-         * @param r1 Red value.
-         * @param g1 Blue value.
-         * @param b1 Green value.
-         * @param r2 Red value.
-         * @param g2 Blue value.
-         * @param b2 Green value.
-         * @param length Distance to interpolate over. Default 100.
-         * @param index Index to start from. Default 0.
-         */
-        function RGBWithRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, length?: number, index?: number): ColorObject;
-
-        /**
-         * Interpolates between the two given color objects over the length supplied.
-         * @param color1 The first Color object.
-         * @param color2 The second Color object.
-         * @param length Distance to interpolate over. Default 100.
-         * @param index Index to start from. Default 0.
-         */
-        function ColorWithColor(color1: Phaser.Display.Color, color2: Phaser.Display.Color, length?: number, index?: number): ColorObject;
-
-        /**
-         * Interpolates between the Color object and color values over the length supplied.
-         * @param color1 The first Color object.
-         * @param r Red value.
-         * @param g Blue value.
-         * @param b Green value.
-         * @param length Distance to interpolate over. Default 100.
-         * @param index Index to start from. Default 0.
-         */
-        function ColorWithRGB(color1: Phaser.Display.Color, r: number, g: number, b: number, length?: number, index?: number): ColorObject;
-
-    }
-
-    type InterpolateObject = {
-        /**
-         * Interpolates between the two given color ranges over the length supplied.
-         */
-        RGBWithRGB: Phaser.Display.Color.InterpolateFunctions.RGBWithRGB;
-        /**
-         * Interpolates between the two given color objects over the length supplied.
-         */
-        ColorWithColor: Phaser.Display.Color.InterpolateFunctions.ColorWithColor;
-        /**
-         * Interpolates between the Color object and color values over the length supplied.
-         */
-        ColorWithRGB: Phaser.Display.Color.InterpolateFunctions.ColorWithRGB;
-    };
-
-}
-
 declare type HSVColorObject = {
     /**
      * The hue color value. A number between 0 and 1
@@ -1376,165 +1249,7 @@ declare type JSONBitmapText = JSONGameObject & {
     align: integer;
 };
 
-declare type CreateCallback = (bob: Phaser.GameObjects.Blitter.Bob, index: integer)=>void;
-
-declare namespace [Phaser.GameObjects.Blitter] Phaser.GameObjects {
-    namespace Blitter {
-    }
-
-}
-
-declare namespace Phaser.GameObjects.Blitter {
-    /**
-     * A Bob Game Object.
-     * 
-     * A Bob belongs to a Blitter Game Object. The Blitter is responsible for managing and rendering this object.
-     * 
-     * A Bob has a position, alpha value and a frame from a texture that it uses to render with. You can also toggle
-     * the flipped and visible state of the Bob. The Frame the Bob uses to render can be changed dynamically, but it
-     * must be a Frame within the Texture used by the parent Blitter.
-     * 
-     * Bob positions are relative to the Blitter parent. So if you move the Blitter parent, all Bob children will
-     * have their positions impacted by this change as well.
-     * 
-     * You can manipulate Bob objects directly from your game code, but the creation and destruction of them should be
-     * handled via the Blitter parent.
-     */
-    class Bob {
-        /**
-         * 
-         * @param blitter The parent Blitter object is responsible for updating this Bob.
-         * @param x The horizontal position of this Game Object in the world, relative to the parent Blitter position.
-         * @param y The vertical position of this Game Object in the world, relative to the parent Blitter position.
-         * @param frame The Frame this Bob will render with, as defined in the Texture the parent Blitter is using.
-         * @param visible Should the Bob render visible or not to start with?
-         */
-        constructor(blitter: Phaser.GameObjects.Blitter, x: number, y: number, frame: string | integer, visible: boolean);
-
-        /**
-         * The Blitter object that this Bob belongs to.
-         */
-        parent: Phaser.GameObjects.Blitter;
-
-        /**
-         * The x position of this Bob, relative to the x position of the Blitter.
-         */
-        x: number;
-
-        /**
-         * The y position of this Bob, relative to the y position of the Blitter.
-         */
-        y: number;
-
-        /**
-         * The frame that the Bob uses to render with.
-         * To change the frame use the `Bob.setFrame` method.
-         */
-        protected frame: Phaser.Textures.Frame;
-
-        /**
-         * A blank object which can be used to store data related to this Bob in.
-         */
-        data: object;
-
-        /**
-         * The horizontally flipped state of the Bob.
-         * A Bob that is flipped horizontally will render inversed on the horizontal axis.
-         * Flipping always takes place from the middle of the texture.
-         */
-        flipX: boolean;
-
-        /**
-         * The vertically flipped state of the Bob.
-         * A Bob that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
-         * Flipping always takes place from the middle of the texture.
-         */
-        flipY: boolean;
-
-        /**
-         * Changes the Texture Frame being used by this Bob.
-         * The frame must be part of the Texture the parent Blitter is using.
-         * If no value is given it will use the default frame of the Blitter parent.
-         * @param frame The frame to be used during rendering.
-         */
-        setFrame(frame?: string | integer | Phaser.Textures.Frame): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Resets the horizontal and vertical flipped state of this Bob back to their default un-flipped state.
-         */
-        resetFlip(): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Resets this Bob.
-         * 
-         * Changes the position to the values given, and optionally changes the frame.
-         * 
-         * Also resets the flipX and flipY values, sets alpha back to 1 and visible to true.
-         * @param x The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
-         * @param y The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
-         * @param frame The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
-         */
-        reset(x: number, y: number, frame?: string | integer | Phaser.Textures.Frame): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Sets the horizontal flipped state of this Bob.
-         * @param value The flipped state. `false` for no flip, or `true` to be flipped.
-         */
-        setFlipX(value: boolean): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Sets the vertical flipped state of this Bob.
-         * @param value The flipped state. `false` for no flip, or `true` to be flipped.
-         */
-        setFlipY(value: boolean): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Sets the horizontal and vertical flipped state of this Bob.
-         * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
-         * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
-         */
-        setFlip(x: boolean, y: boolean): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Sets the visibility of this Bob.
-         * 
-         * An invisible Bob will skip rendering.
-         * @param value The visible state of the Game Object.
-         */
-        setVisible(value: boolean): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Set the Alpha level of this Bob. The alpha controls the opacity of the Game Object as it renders.
-         * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
-         * 
-         * A Bob with alpha 0 will skip rendering.
-         * @param value The alpha value used for this Bob. Between 0 and 1.
-         */
-        setAlpha(value: number): Phaser.GameObjects.Blitter.Bob;
-
-        /**
-         * Destroys this Bob instance.
-         * Removes itself from the Blitter and clears the parent, frame and data properties.
-         */
-        destroy(): void;
-
-        /**
-         * The visible state of the Bob.
-         * 
-         * An invisible Bob will skip rendering.
-         */
-        visible: boolean;
-
-        /**
-         * The alpha value of the Bob, between 0 and 1.
-         * 
-         * A Bob with alpha 0 will skip rendering.
-         */
-        alpha: number;
-
-    }
-
-}
+declare type CreateCallback = (bob: Phaser.GameObjects.Bob, index: integer)=>void;
 
 declare type GameObjectConfig = {
     /**
@@ -2163,7 +1878,7 @@ declare type ParticleEmitterConfig = {
     /**
      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#blendMode}.
      */
-    blendMode?: integer;
+    blendMode?: Phaser.BlendModes | string;
     /**
      * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope} and {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
      */
@@ -2469,12 +2184,6 @@ declare type SpriteConfig = GameObjectConfig & {
     frame?: number | string;
 };
 
-declare namespace [Phaser.GameObjects.Text] Phaser.GameObjects {
-    namespace Text {
-    }
-
-}
-
 /**
  * A custom function that will be responsible for wrapping the text.
  */
@@ -2497,356 +2206,6 @@ declare type BitmapTextMetrics = {
      */
     fontSize: number;
 };
-
-declare namespace Phaser.GameObjects.Text {
-    /**
-     * Style settings for a Text object.
-     */
-    class TextStyle {
-        /**
-         * 
-         * @param text The Text object that this TextStyle is styling.
-         * @param style The style settings to set.
-         */
-        constructor(text: Phaser.GameObjects.Text, style: object);
-
-        /**
-         * The Text object that this TextStyle is styling.
-         */
-        parent: Phaser.GameObjects.Text;
-
-        /**
-         * The font family.
-         */
-        fontFamily: string;
-
-        /**
-         * The font size.
-         */
-        fontSize: string;
-
-        /**
-         * The font style.
-         */
-        fontStyle: string;
-
-        /**
-         * The background color.
-         */
-        backgroundColor: string;
-
-        /**
-         * The text fill color.
-         */
-        color: string;
-
-        /**
-         * The text stroke color.
-         */
-        stroke: string;
-
-        /**
-         * The text stroke thickness.
-         */
-        strokeThickness: number;
-
-        /**
-         * The horizontal shadow offset.
-         */
-        shadowOffsetX: number;
-
-        /**
-         * The vertical shadow offset.
-         */
-        shadowOffsetY: number;
-
-        /**
-         * The shadow color.
-         */
-        shadowColor: string;
-
-        /**
-         * The shadow blur radius.
-         */
-        shadowBlur: number;
-
-        /**
-         * Whether shadow stroke is enabled or not.
-         */
-        shadowStroke: boolean;
-
-        /**
-         * Whether shadow fill is enabled or not.
-         */
-        shadowFill: boolean;
-
-        /**
-         * The text alignment.
-         */
-        align: string;
-
-        /**
-         * The maximum number of lines to draw.
-         */
-        maxLines: integer;
-
-        /**
-         * The fixed width of the text.
-         * 
-         * `0` means no fixed with.
-         */
-        fixedWidth: number;
-
-        /**
-         * The fixed height of the text.
-         * 
-         * `0` means no fixed height.
-         */
-        fixedHeight: number;
-
-        /**
-         * The resolution the text is rendered to its internal canvas at.
-         * The default is 0, which means it will use the resolution set in the Game Config.
-         */
-        resolution: number;
-
-        /**
-         * Whether the text should render right to left.
-         */
-        rtl: boolean;
-
-        /**
-         * The test string to use when measuring the font.
-         */
-        testString: string;
-
-        /**
-         * The amount of horizontal padding adding to the width of the text when calculating the font metrics.
-         */
-        baselineX: number;
-
-        /**
-         * The amount of vertical padding adding to the width of the text when calculating the font metrics.
-         */
-        baselineY: number;
-
-        /**
-         * Set the text style.
-         * @param style The style settings to set.
-         * @param updateText Whether to update the text immediately. Default true.
-         * @param setDefaults Use the default values is not set, or the local values. Default false.
-         */
-        setStyle(style: object, updateText?: boolean, setDefaults?: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Synchronize the font settings to the given Canvas Rendering Context.
-         * @param canvas The Canvas Element.
-         * @param context The Canvas Rendering Context.
-         */
-        syncFont(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
-
-        /**
-         * Synchronize the text style settings to the given Canvas Rendering Context.
-         * @param canvas The Canvas Element.
-         * @param context The Canvas Rendering Context.
-         */
-        syncStyle(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
-
-        /**
-         * Synchronize the shadow settings to the given Canvas Rendering Context.
-         * @param context The Canvas Rendering Context.
-         * @param enabled Whether shadows are enabled or not.
-         */
-        syncShadow(context: CanvasRenderingContext2D, enabled: boolean): void;
-
-        /**
-         * Update the style settings for the parent Text object.
-         * @param recalculateMetrics Whether to recalculate font and text metrics.
-         */
-        update(recalculateMetrics: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Set the font.
-         * 
-         * If a string is given, the font family is set.
-         * 
-         * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
-         * properties of that object are set.
-         * @param font The font family or font settings to set.
-         * @param updateText Whether to update the text immediately. Default true.
-         */
-        setFont(font: string | object, updateText?: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Set the font family.
-         * @param family The font family.
-         */
-        setFontFamily(family: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the font style.
-         * @param style The font style.
-         */
-        setFontStyle(style: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the font size.
-         * @param size The font size.
-         */
-        setFontSize(size: number | string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the test string to use when measuring the font.
-         * @param string The test string to use when measuring the font.
-         */
-        setTestString(string: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set a fixed width and height for the text.
-         * 
-         * Pass in `0` for either of these parameters to disable fixed width or height respectively.
-         * @param width The fixed width to set.
-         * @param height The fixed height to set.
-         */
-        setFixedSize(width: number, height: number): Phaser.GameObjects.Text;
-
-        /**
-         * Set the background color.
-         * @param color The background color.
-         */
-        setBackgroundColor(color: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the text fill color.
-         * @param color The text fill color.
-         */
-        setFill(color: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the text fill color.
-         * @param color The text fill color.
-         */
-        setColor(color: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the resolution used by the Text object.
-         * 
-         * By default it will be set to match the resolution set in the Game Config,
-         * but you can override it via this method. It allows for much clearer text on High DPI devices,
-         * at the cost of memory because it uses larger internal Canvas textures for the Text.
-         * 
-         * Please use with caution, as the more high res Text you have, the more memory it uses up.
-         * @param value The resolution for this Text object to use.
-         */
-        setResolution(value: number): Phaser.GameObjects.Text;
-
-        /**
-         * Set the stroke settings.
-         * @param color The stroke color.
-         * @param thickness The stroke thickness.
-         */
-        setStroke(color: string, thickness: number): Phaser.GameObjects.Text;
-
-        /**
-         * Set the shadow settings.
-         * 
-         * Calling this method always re-measures the parent Text object,
-         * so only call it when you actually change the shadow settings.
-         * @param x The horizontal shadow offset. Default 0.
-         * @param y The vertical shadow offset. Default 0.
-         * @param color The shadow color. Default '#000'.
-         * @param blur The shadow blur radius. Default 0.
-         * @param shadowStroke Whether to stroke the shadow. Default false.
-         * @param shadowFill Whether to fill the shadow. Default true.
-         */
-        setShadow(x?: number, y?: number, color?: string, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Set the shadow offset.
-         * @param x The horizontal shadow offset. Default 0.
-         * @param y The vertical shadow offset. Default 0.
-         */
-        setShadowOffset(x?: number, y?: number): Phaser.GameObjects.Text;
-
-        /**
-         * Set the shadow color.
-         * @param color The shadow color. Default '#000'.
-         */
-        setShadowColor(color?: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the shadow blur radius.
-         * @param blur The shadow blur radius. Default 0.
-         */
-        setShadowBlur(blur?: number): Phaser.GameObjects.Text;
-
-        /**
-         * Enable or disable shadow stroke.
-         * @param enabled Whether shadow stroke is enabled or not.
-         */
-        setShadowStroke(enabled: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Enable or disable shadow fill.
-         * @param enabled Whether shadow fill is enabled or not.
-         */
-        setShadowFill(enabled: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Set the width (in pixels) to use for wrapping lines.
-         * 
-         * Pass in null to remove wrapping by width.
-         * @param width The maximum width of a line in pixels. Set to null to remove wrapping.
-         * @param useAdvancedWrap Whether or not to use the advanced wrapping
-         * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
-         * spaces and whitespace are left as is. Default false.
-         */
-        setWordWrapWidth(width: number, useAdvancedWrap?: boolean): Phaser.GameObjects.Text;
-
-        /**
-         * Set a custom callback for wrapping lines.
-         * 
-         * Pass in null to remove wrapping by callback.
-         * @param callback A custom function that will be responsible for wrapping the
-         * text. It will receive two arguments: text (the string to wrap), textObject (this Text
-         * instance). It should return the wrapped lines either as an array of lines or as a string with
-         * newline characters in place to indicate where breaks should happen.
-         * @param scope The scope that will be applied when the callback is invoked. Default null.
-         */
-        setWordWrapCallback(callback: TextStyleWordWrapCallback, scope?: object): Phaser.GameObjects.Text;
-
-        /**
-         * Set the text alignment.
-         * 
-         * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
-         * @param align The text alignment.
-         */
-        setAlign(align: string): Phaser.GameObjects.Text;
-
-        /**
-         * Set the maximum number of lines to draw.
-         * @param max The maximum number of lines to draw. Default 0.
-         */
-        setMaxLines(max?: integer): Phaser.GameObjects.Text;
-
-        /**
-         * Get the current text metrics.
-         */
-        getTextMetrics(): BitmapTextMetrics;
-
-        /**
-         * Build a JSON representation of this Text Style.
-         */
-        toJSON(): object;
-
-        /**
-         * Destroy this Text Style.
-         */
-        destroy(): void;
-
-    }
-
-}
 
 declare type TileSprite = GameObjectConfig & {
     /**
@@ -2960,60 +2319,6 @@ declare type FileConfig = {
      */
     config?: any;
 };
-
-declare namespace Phaser.Loader.AudioSpriteFile {
-    /**
-     * Called by each File when it finishes loading.
-     * @param file The File that has completed processing.
-     */
-    function onFileComplete(file: Phaser.Loader.File): void;
-
-    /**
-     * Adds this file to its target cache upon successful loading and processing.
-     */
-    function addToCache(): void;
-
-}
-
-declare namespace Phaser.Loader.MultiAtlasFile {
-    /**
-     * Called by each File when it finishes loading.
-     * @param file The File that has completed processing.
-     */
-    function onFileComplete(file: Phaser.Loader.File): void;
-
-    /**
-     * Adds this file to its target cache upon successful loading and processing.
-     */
-    function addToCache(): void;
-
-}
-
-declare namespace Phaser.Loader.FileTypesManager {
-    /**
-     * Static method called when a LoaderPlugin is created.
-     * 
-     * Loops through the local types object and injects all of them as
-     * properties into the LoaderPlugin instance.
-     * @param loader The LoaderPlugin to install the types into.
-     */
-    function install(loader: Phaser.Loader.LoaderPlugin): void;
-
-    /**
-     * Static method called directly by the File Types.
-     * 
-     * The key is a reference to the function used to load the files via the Loader, i.e. `image`.
-     * @param key The key that will be used as the method name in the LoaderPlugin.
-     * @param factoryFunction The function that will be called when LoaderPlugin.key is invoked.
-     */
-    function register(key: string, factoryFunction: Function): void;
-
-    /**
-     * Removed all associated file types.
-     */
-    function destroy(): void;
-
-}
 
 declare type XHRSettingsObject = {
     /**
@@ -3891,7 +3196,7 @@ declare namespace Phaser {
             /**
              * Converts the animation data to JSON.
              */
-            toJSON(): JSONAnimation;
+            toJSON(): Phaser.Animations.Types.JSONAnimation;
 
             /**
              * [description]
@@ -3988,7 +3293,7 @@ declare namespace Phaser {
             /**
              * Generates a JavaScript object suitable for converting to JSON.
              */
-            toJSON(): Phaser.Animations.AnimationFrame.JSONConfig;
+            toJSON(): Phaser.Animations.Types.JSONAnimationFrame;
 
             /**
              * Destroys this object by removing references to external resources and callbacks.
@@ -4081,30 +3386,30 @@ declare namespace Phaser {
              * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
              * @param config The configuration settings for the Animation.
              */
-            create(config: AnimationConfig): Phaser.Animations.Animation | false;
+            create(config: Phaser.Animations.Types.Animation): Phaser.Animations.Animation | false;
 
             /**
              * Loads this Animation Manager's Animations and settings from a JSON object.
              * @param data The JSON object to parse.
              * @param clearCurrentAnimations If set to `true`, the current animations will be removed (`anims.clear()`). If set to `false` (default), the animations in `data` will be added. Default false.
              */
-            fromJSON(data: string | JSONAnimationManager | JSONAnimation, clearCurrentAnimations?: boolean): Phaser.Animations.Animation[];
+            fromJSON(data: string | Phaser.Animations.Types.JSONAnimations | Phaser.Animations.Types.JSONAnimation, clearCurrentAnimations?: boolean): Phaser.Animations.Animation[];
 
             /**
              * [description]
              * @param key The key for the texture containing the animation frames.
              * @param config The configuration object for the animation frame names.
              */
-            generateFrameNames(key: string, config?: GenerateFrameNamesConfig): AnimationFrameConfig[];
+            generateFrameNames(key: string, config?: Phaser.Animations.Types.GenerateFrameNames): Phaser.Animations.Types.AnimationFrame[];
 
             /**
-             * Generate an array of {@link AnimationFrameConfig} objects from a texture key and configuration object.
+             * Generate an array of {@link Phaser.Animations.Types.AnimationFrame} objects from a texture key and configuration object.
              * 
-             * Generates objects with numbered frame names, as configured by the given {@link GenerateFrameNumbersConfig}.
+             * Generates objects with numbered frame names, as configured by the given {@link Phaser.Animations.Types.GenerateFrameNumbers}.
              * @param key The key for the texture containing the animation frames.
              * @param config The configuration object for the animation frames.
              */
-            generateFrameNumbers(key: string, config: GenerateFrameNumbersConfig): AnimationFrameConfig[];
+            generateFrameNumbers(key: string, config: Phaser.Animations.Types.GenerateFrameNumbers): Phaser.Animations.Types.AnimationFrame[];
 
             /**
              * Get an Animation.
@@ -4157,7 +3462,7 @@ declare namespace Phaser {
              * Get the animation data as javascript object by giving key, or get the data of all animations as array of objects, if key wasn't provided.
              * @param key [description]
              */
-            toJSON(key: string): JSONAnimationManager;
+            toJSON(key: string): Phaser.Animations.Types.JSONAnimations;
 
             /**
              * Destroy this Animation Manager and clean up animation definitions and references to other objects.
@@ -4176,7 +3481,7 @@ declare namespace Phaser {
              * This can happen either as a result of an animation instance being added to the Animation Manager,
              * or the Animation Manager creating a new animation directly.
              */
-            var ADD_ANIMATION: any;
+            const ADD_ANIMATION: any;
 
             /**
              * The Animation Complete Event.
@@ -4186,7 +3491,7 @@ declare namespace Phaser {
              * Be careful with the volume of events this could generate. If a group of Sprites all complete the same
              * animation at the same time, this event will invoke its handler for each one of them.
              */
-            var ANIMATION_COMPLETE: any;
+            const ANIMATION_COMPLETE: any;
 
             /**
              * The Animation Repeat Event.
@@ -4196,7 +3501,7 @@ declare namespace Phaser {
              * The event is dispatched directly from the Animation object itself. Which means that listeners
              * bound to this event will be invoked every time the Animation repeats, for every Game Object that may have it.
              */
-            var ANIMATION_REPEAT: any;
+            const ANIMATION_REPEAT: any;
 
             /**
              * The Animation Restart Event.
@@ -4206,7 +3511,7 @@ declare namespace Phaser {
              * Be careful with the volume of events this could generate. If a group of Sprites all restart the same
              * animation at the same time, this event will invoke its handler for each one of them.
              */
-            var ANIMATION_RESTART: any;
+            const ANIMATION_RESTART: any;
 
             /**
              * The Animation Start Event.
@@ -4216,7 +3521,7 @@ declare namespace Phaser {
              * Be careful with the volume of events this could generate. If a group of Sprites all play the same
              * animation at the same time, this event will invoke its handler for each one of them.
              */
-            var ANIMATION_START: any;
+            const ANIMATION_START: any;
 
             /**
              * The Pause All Animations Event.
@@ -4226,14 +3531,14 @@ declare namespace Phaser {
              * When this happens all current animations will stop updating, although it doesn't necessarily mean
              * that the game has paused as well.
              */
-            var PAUSE_ALL: any;
+            const PAUSE_ALL: any;
 
             /**
              * The Remove Animation Event.
              * 
              * This event is dispatched when an animation is removed from the global Animation Manager.
              */
-            var REMOVE_ANIMATION: any;
+            const REMOVE_ANIMATION: any;
 
             /**
              * The Resume All Animations Event.
@@ -4242,7 +3547,7 @@ declare namespace Phaser {
              * 
              * When this happens all current animations will continue updating again.
              */
-            var RESUME_ALL: any;
+            const RESUME_ALL: any;
 
             /**
              * The Sprite Animation Complete Event.
@@ -4253,7 +3558,7 @@ declare namespace Phaser {
              * 
              * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_COMPLETE` event.
              */
-            var SPRITE_ANIMATION_COMPLETE: any;
+            const SPRITE_ANIMATION_COMPLETE: any;
 
             /**
              * The Sprite Animation Key Complete Event.
@@ -4263,7 +3568,7 @@ declare namespace Phaser {
              * Listen for it on the Sprite using `sprite.on('animationcomplete-key', listener)` where `key` is the key of
              * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationcomplete-explode`.
              */
-            var SPRITE_ANIMATION_KEY_COMPLETE: any;
+            const SPRITE_ANIMATION_KEY_COMPLETE: any;
 
             /**
              * The Sprite Animation Key Repeat Event.
@@ -4273,7 +3578,7 @@ declare namespace Phaser {
              * Listen for it on the Sprite using `sprite.on('animationrepeat-key', listener)` where `key` is the key of
              * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrepeat-explode`.
              */
-            var SPRITE_ANIMATION_KEY_REPEAT: any;
+            const SPRITE_ANIMATION_KEY_REPEAT: any;
 
             /**
              * The Sprite Animation Key Restart Event.
@@ -4283,7 +3588,7 @@ declare namespace Phaser {
              * Listen for it on the Sprite using `sprite.on('animationrestart-key', listener)` where `key` is the key of
              * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrestart-explode`.
              */
-            var SPRITE_ANIMATION_KEY_RESTART: any;
+            const SPRITE_ANIMATION_KEY_RESTART: any;
 
             /**
              * The Sprite Animation Key Start Event.
@@ -4293,7 +3598,7 @@ declare namespace Phaser {
              * Listen for it on the Sprite using `sprite.on('animationstart-key', listener)` where `key` is the key of
              * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationstart-explode`.
              */
-            var SPRITE_ANIMATION_KEY_START: any;
+            const SPRITE_ANIMATION_KEY_START: any;
 
             /**
              * The Sprite Animation Key Update Event.
@@ -4304,7 +3609,7 @@ declare namespace Phaser {
              * Listen for it on the Sprite using `sprite.on('animationupdate-key', listener)` where `key` is the key of
              * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationupdate-explode`.
              */
-            var SPRITE_ANIMATION_KEY_UPDATE: any;
+            const SPRITE_ANIMATION_KEY_UPDATE: any;
 
             /**
              * The Sprite Animation Repeat Event.
@@ -4315,7 +3620,7 @@ declare namespace Phaser {
              * 
              * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_REPEAT` event.
              */
-            var SPRITE_ANIMATION_REPEAT: any;
+            const SPRITE_ANIMATION_REPEAT: any;
 
             /**
              * The Sprite Animation Restart Event.
@@ -4326,7 +3631,7 @@ declare namespace Phaser {
              * 
              * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_RESTART` event.
              */
-            var SPRITE_ANIMATION_RESTART: any;
+            const SPRITE_ANIMATION_RESTART: any;
 
             /**
              * The Sprite Animation Start Event.
@@ -4337,7 +3642,7 @@ declare namespace Phaser {
              * 
              * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_START` event.
              */
-            var SPRITE_ANIMATION_START: any;
+            const SPRITE_ANIMATION_START: any;
 
             /**
              * The Sprite Animation Update Event.
@@ -4349,7 +3654,7 @@ declare namespace Phaser {
              * 
              * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_UPDATE` event.
              */
-            var SPRITE_ANIMATION_UPDATE: any;
+            const SPRITE_ANIMATION_UPDATE: any;
 
         }
 
@@ -4424,6 +3729,60 @@ declare namespace Phaser {
                 visible?: boolean;
             };
 
+            type GenerateFrameNames = {
+                /**
+                 * The string to append to every resulting frame name if using a range or an array of `frames`.
+                 */
+                prefix?: string;
+                /**
+                 * If `frames` is not provided, the number of the first frame to return.
+                 */
+                start?: integer;
+                /**
+                 * If `frames` is not provided, the number of the last frame to return.
+                 */
+                end?: integer;
+                /**
+                 * The string to append to every resulting frame name if using a range or an array of `frames`.
+                 */
+                suffix?: string;
+                /**
+                 * The minimum expected lengths of each resulting frame's number. Numbers will be left-padded with zeroes until they are this long, then prepended and appended to create the resulting frame name.
+                 */
+                zeroPad?: integer;
+                /**
+                 * The array to append the created configuration objects to.
+                 */
+                outputArray?: Phaser.Animations.Types.AnimationFrame[];
+                /**
+                 * If provided as an array, the range defined by `start` and `end` will be ignored and these frame numbers will be used.
+                 */
+                frames?: boolean;
+            };
+
+            type GenerateFrameNumbers = {
+                /**
+                 * The starting frame of the animation.
+                 */
+                start?: integer;
+                /**
+                 * The ending frame of the animation.
+                 */
+                end?: integer;
+                /**
+                 * A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`.
+                 */
+                first?: boolean | integer;
+                /**
+                 * An array to concatenate the output onto.
+                 */
+                outputArray?: Phaser.Animations.Types.AnimationFrame[];
+                /**
+                 * A custom sequence of frames.
+                 */
+                frames?: boolean | integer[];
+            };
+
             type JSONAnimation = {
                 /**
                  * The key that the animation will be associated with. i.e. sprite.animations.play(key)
@@ -4488,6 +3847,17 @@ declare namespace Phaser {
                  * Additional time (in ms) that this frame should appear for during playback.
                  */
                 duration: number;
+            };
+
+            type JSONAnimations = {
+                /**
+                 * An array of all Animations added to the Animation Manager.
+                 */
+                anims: Phaser.Animations.Types.JSONAnimation[];
+                /**
+                 * The global time scale of the Animation Manager.
+                 */
+                globalTimeScale: number;
             };
 
         }
@@ -4663,14 +4033,14 @@ declare namespace Phaser {
              * 
              * This event is dispatched by any Cache that extends the BaseCache each time a new object is added to it.
              */
-            var ADD: any;
+            const ADD: any;
 
             /**
              * The Cache Remove Event.
              * 
              * This event is dispatched by any Cache that extends the BaseCache each time an object is removed from it.
              */
-            var REMOVE: any;
+            const REMOVE: any;
 
         }
 
@@ -4728,7 +4098,7 @@ declare namespace Phaser {
                 /**
                  * A reference to the Game Scale Manager.
                  */
-                scaleManager: Phaser.DOM.ScaleManager;
+                scaleManager: Phaser.Scale.ScaleManager;
 
                 /**
                  * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
@@ -6532,7 +5902,7 @@ declare namespace Phaser {
                  * 
                  * This event is dispatched by a Camera instance when it is destroyed by the Camera Manager.
                  */
-                var DESTROY: any;
+                const DESTROY: any;
 
                 /**
                  * The Camera Fade In Complete Event.
@@ -6541,7 +5911,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Camera instance using `Camera.on('camerafadeincomplete', listener)`.
                  */
-                var FADE_IN_COMPLETE: any;
+                const FADE_IN_COMPLETE: any;
 
                 /**
                  * The Camera Fade In Start Event.
@@ -6550,7 +5920,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Camera instance using `Camera.on('camerafadeinstart', listener)`.
                  */
-                var FADE_IN_START: any;
+                const FADE_IN_START: any;
 
                 /**
                  * The Camera Fade Out Complete Event.
@@ -6559,7 +5929,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Camera instance using `Camera.on('camerafadeoutcomplete', listener)`.
                  */
-                var FADE_OUT_COMPLETE: any;
+                const FADE_OUT_COMPLETE: any;
 
                 /**
                  * The Camera Fade Out Start Event.
@@ -6568,35 +5938,35 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Camera instance using `Camera.on('camerafadeoutstart', listener)`.
                  */
-                var FADE_OUT_START: any;
+                const FADE_OUT_START: any;
 
                 /**
                  * The Camera Flash Complete Event.
                  * 
                  * This event is dispatched by a Camera instance when the Flash Effect completes.
                  */
-                var FLASH_COMPLETE: any;
+                const FLASH_COMPLETE: any;
 
                 /**
                  * The Camera Flash Start Event.
                  * 
                  * This event is dispatched by a Camera instance when the Flash Effect starts.
                  */
-                var FLASH_START: any;
+                const FLASH_START: any;
 
                 /**
                  * The Camera Pan Complete Event.
                  * 
                  * This event is dispatched by a Camera instance when the Pan Effect completes.
                  */
-                var PAN_COMPLETE: any;
+                const PAN_COMPLETE: any;
 
                 /**
                  * The Camera Pan Start Event.
                  * 
                  * This event is dispatched by a Camera instance when the Pan Effect starts.
                  */
-                var PAN_START: any;
+                const PAN_START: any;
 
                 /**
                  * The Camera Post-Render Event.
@@ -6606,7 +5976,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Camera instance using: `camera.on('postrender', listener)`.
                  */
-                var POST_RENDER: any;
+                const POST_RENDER: any;
 
                 /**
                  * The Camera Pre-Render Event.
@@ -6616,35 +5986,35 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Camera instance using: `camera.on('prerender', listener)`.
                  */
-                var PRE_RENDER: any;
+                const PRE_RENDER: any;
 
                 /**
                  * The Camera Shake Complete Event.
                  * 
                  * This event is dispatched by a Camera instance when the Shake Effect completes.
                  */
-                var SHAKE_COMPLETE: any;
+                const SHAKE_COMPLETE: any;
 
                 /**
                  * The Camera Shake Start Event.
                  * 
                  * This event is dispatched by a Camera instance when the Shake Effect starts.
                  */
-                var SHAKE_START: any;
+                const SHAKE_START: any;
 
                 /**
                  * The Camera Zoom Complete Event.
                  * 
                  * This event is dispatched by a Camera instance when the Zoom Effect completes.
                  */
-                var ZOOM_COMPLETE: any;
+                const ZOOM_COMPLETE: any;
 
                 /**
                  * The Camera Zoom Start Event.
                  * 
                  * This event is dispatched by a Camera instance when the Zoom Effect starts.
                  */
-                var ZOOM_START: any;
+                const ZOOM_START: any;
 
             }
 
@@ -7234,7 +6604,7 @@ declare namespace Phaser {
             /**
              * The zoom factor, as used by the Scale Manager.
              */
-            readonly zoom: Phaser.Scale.Zoom | integer;
+            readonly zoom: Phaser.Scale.ZoomType | integer;
 
             /**
              * The canvas device pixel resolution. Currently un-used.
@@ -7249,7 +6619,7 @@ declare namespace Phaser {
             /**
              * The scale mode as used by the Scale Manager. The default is zero, which is no scaling.
              */
-            readonly scaleMode: Phaser.Scale.ScaleModes;
+            readonly scaleMode: Phaser.Scale.ScaleModeType;
 
             /**
              * Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
@@ -7264,7 +6634,7 @@ declare namespace Phaser {
             /**
              * Automatically center the canvas within the parent?
              */
-            readonly autoCenter: Phaser.Scale.Center;
+            readonly autoCenter: Phaser.Scale.CenterType;
 
             /**
              * How many ms should elapse before checking if the browser size has changed?
@@ -7637,7 +7007,7 @@ declare namespace Phaser {
              * enters a blurred state. The blur event is raised when the window loses focus. This can happen if a user swaps
              * tab, or if they simply remove focus from the browser to another app.
              */
-            var BLUR: any;
+            const BLUR: any;
 
             /**
              * The Game Boot Event.
@@ -7645,7 +7015,7 @@ declare namespace Phaser {
              * This event is dispatched when the Phaser Game instance has finished booting, but before it is ready to start running.
              * The global systems use this event to know when to set themselves up, dispatching their own `ready` events as required.
              */
-            var BOOT: any;
+            const BOOT: any;
 
             /**
              * The Game Destroy Event.
@@ -7654,7 +7024,7 @@ declare namespace Phaser {
              * Lots of internal systems listen to this event in order to clear themselves out.
              * Custom plugins and game code should also do the same.
              */
-            var DESTROY: any;
+            const DESTROY: any;
 
             /**
              * The Game Focus Event.
@@ -7662,7 +7032,7 @@ declare namespace Phaser {
              * This event is dispatched by the Game Visibility Handler when the window in which the Game instance is embedded
              * enters a focused state. The focus event is raised when the window re-gains focus, having previously lost it.
              */
-            var FOCUS: any;
+            const FOCUS: any;
 
             /**
              * The Game Hidden Event.
@@ -7674,14 +7044,14 @@ declare namespace Phaser {
              * control the main game loop, will automatically pause. There is no way to stop this from happening. It is something
              * your game should account for in its own code, should the pause be an issue (i.e. for multiplayer games)
              */
-            var HIDDEN: any;
+            const HIDDEN: any;
 
             /**
              * The Game Pause Event.
              * 
              * This event is dispatched when the Game loop enters a paused state, usually as a result of the Visibility Handler.
              */
-            var PAUSE: any;
+            const PAUSE: any;
 
             /**
              * The Game Post-Render Event.
@@ -7691,7 +7061,7 @@ declare namespace Phaser {
              * Every Scene will have rendered and been drawn to the canvas by the time this event is fired.
              * Use it for any last minute post-processing before the next game step begins.
              */
-            var POST_RENDER: any;
+            const POST_RENDER: any;
 
             /**
              * The Game Post-Step Event.
@@ -7699,7 +7069,7 @@ declare namespace Phaser {
              * This event is dispatched after the Scene Manager has updated.
              * Hook into it from plugins or systems that need to do things before the render starts.
              */
-            var POST_STEP: any;
+            const POST_STEP: any;
 
             /**
              * The Game Pre-Render Event.
@@ -7708,7 +7078,7 @@ declare namespace Phaser {
              * 
              * The renderer will already have been initialized this frame, clearing itself and preparing to receive the Scenes for rendering, but it won't have actually drawn anything yet.
              */
-            var PRE_RENDER: any;
+            const PRE_RENDER: any;
 
             /**
              * The Game Pre-Step Event.
@@ -7716,7 +7086,7 @@ declare namespace Phaser {
              * This event is dispatched before the main Game Step starts. By this point in the game cycle none of the Scene updates have yet happened.
              * Hook into it from plugins or systems that need to update before the Scene Manager does.
              */
-            var PRE_STEP: any;
+            const PRE_STEP: any;
 
             /**
              * The Game Ready Event.
@@ -7724,14 +7094,14 @@ declare namespace Phaser {
              * This event is dispatched when the Phaser Game instance has finished booting, the Texture Manager is fully ready,
              * and all local systems are now able to start.
              */
-            var READY: any;
+            const READY: any;
 
             /**
              * The Game Resume Event.
              * 
              * This event is dispatched when the game loop leaves a paused state and resumes running.
              */
-            var RESUME: any;
+            const RESUME: any;
 
             /**
              * The Game Step Event.
@@ -7739,7 +7109,7 @@ declare namespace Phaser {
              * This event is dispatched after the Game Pre-Step and before the Scene Manager steps.
              * Hook into it from plugins or systems that need to update before the Scene Manager does, but after the core Systems have.
              */
-            var STEP: any;
+            const STEP: any;
 
             /**
              * The Game Visible Event.
@@ -7749,7 +7119,7 @@ declare namespace Phaser {
              * 
              * Only browsers that support the Visibility API will cause this event to be emitted.
              */
-            var VISIBLE: any;
+            const VISIBLE: any;
 
         }
 
@@ -9094,7 +8464,7 @@ declare namespace Phaser {
              * This event is dispatched for all items that change in the Data Manager.
              * To listen for the change of a specific item, use the `CHANGE_DATA_KEY_EVENT` event.
              */
-            var CHANGE_DATA: any;
+            const CHANGE_DATA: any;
 
             /**
              * The Change Data Key Event.
@@ -9106,7 +8476,7 @@ declare namespace Phaser {
              * where `key` is the unique string key of the data item. For example, if you have a data item stored called `gold`
              * then you can listen for `sprite.data.on('changedata-gold')`.
              */
-            var CHANGE_DATA_KEY: any;
+            const CHANGE_DATA_KEY: any;
 
             /**
              * The Remove Data Event.
@@ -9116,7 +8486,7 @@ declare namespace Phaser {
              * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
              * the removal of a data item on a Game Object you would use: `sprite.data.on('removedata', listener)`.
              */
-            var REMOVE_DATA: any;
+            const REMOVE_DATA: any;
 
             /**
              * The Set Data Event.
@@ -9126,7 +8496,7 @@ declare namespace Phaser {
              * Game Objects with data enabled have an instance of a Data Manager under the `data` property. So, to listen for
              * the addition of a new data item on a Game Object you would use: `sprite.data.on('setdata', listener)`.
              */
-            var SET_DATA: any;
+            const SET_DATA: any;
 
         }
 
@@ -10052,6 +9422,45 @@ declare namespace Phaser {
 
         }
 
+        namespace Color {
+            namespace Interpolate {
+                /**
+                 * Interpolates between the two given color ranges over the length supplied.
+                 * @param r1 Red value.
+                 * @param g1 Blue value.
+                 * @param b1 Green value.
+                 * @param r2 Red value.
+                 * @param g2 Blue value.
+                 * @param b2 Green value.
+                 * @param length Distance to interpolate over. Default 100.
+                 * @param index Index to start from. Default 0.
+                 */
+                function RGBWithRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, length?: number, index?: number): ColorObject;
+
+                /**
+                 * Interpolates between the two given color objects over the length supplied.
+                 * @param color1 The first Color object.
+                 * @param color2 The second Color object.
+                 * @param length Distance to interpolate over. Default 100.
+                 * @param index Index to start from. Default 0.
+                 */
+                function ColorWithColor(color1: Phaser.Display.Color, color2: Phaser.Display.Color, length?: number, index?: number): ColorObject;
+
+                /**
+                 * Interpolates between the Color object and color values over the length supplied.
+                 * @param color1 The first Color object.
+                 * @param r Red value.
+                 * @param g Blue value.
+                 * @param b Green value.
+                 * @param length Distance to interpolate over. Default 100.
+                 * @param index Index to start from. Default 0.
+                 */
+                function ColorWithRGB(color1: Phaser.Display.Color, r: number, g: number, b: number, length?: number, index?: number): ColorObject;
+
+            }
+
+        }
+
         /**
          * The Color class holds a single color value and allows for easy modification and reading of it.
          */
@@ -10323,8 +9732,6 @@ declare namespace Phaser {
              * @param input The color value to convert into a Color object.
              */
             static IntegerToRGB(input: integer): ColorObject;
-
-            static Interpolate: Phaser.Display.Color.InterpolateObject;
 
             /**
              * Converts an object containing `r`, `g`, `b` and `a` properties into a Color class instance.
@@ -12449,7 +11856,7 @@ declare namespace Phaser {
              * The children of this Blitter.
              * This List contains all of the Bob objects created by the Blitter.
              */
-            children: Phaser.Structs.List<Phaser.GameObjects.Blitter.Bob>;
+            children: Phaser.Structs.List<Phaser.GameObjects.Bob>;
 
             /**
              * Is the Blitter considered dirty?
@@ -12468,7 +11875,7 @@ declare namespace Phaser {
              * @param visible Should the created Bob render or not? Default true.
              * @param index The position in the Blitters Display List to add the new Bob at. Defaults to the top of the list.
              */
-            create(x: number, y: number, frame?: string | integer | Phaser.Textures.Frame, visible?: boolean, index?: integer): Phaser.GameObjects.Blitter.Bob;
+            create(x: number, y: number, frame?: string | integer | Phaser.Textures.Frame, visible?: boolean, index?: integer): Phaser.GameObjects.Bob;
 
             /**
              * Creates multiple Bob objects within this Blitter and then passes each of them to the specified callback.
@@ -12477,7 +11884,7 @@ declare namespace Phaser {
              * @param frame The Frame the Bobs will use. It must be part of the Blitter Texture.
              * @param visible Should the created Bob render or not? Default true.
              */
-            createFromCallback(callback: CreateCallback, quantity: integer, frame?: string | integer | Phaser.Textures.Frame | string[] | integer[] | Phaser.Textures.Frame[], visible?: boolean): Phaser.GameObjects.Blitter.Bob[];
+            createFromCallback(callback: CreateCallback, quantity: integer, frame?: string | integer | Phaser.Textures.Frame | string[] | integer[] | Phaser.Textures.Frame[], visible?: boolean): Phaser.GameObjects.Bob[];
 
             /**
              * Creates multiple Bobs in one call.
@@ -12490,19 +11897,19 @@ declare namespace Phaser {
              * @param frame The Frame the Bobs will use. It must be part of the Blitter Texture.
              * @param visible Should the created Bob render or not? Default true.
              */
-            createMultiple(quantity: integer, frame?: string | integer | Phaser.Textures.Frame | string[] | integer[] | Phaser.Textures.Frame[], visible?: boolean): Phaser.GameObjects.Blitter.Bob[];
+            createMultiple(quantity: integer, frame?: string | integer | Phaser.Textures.Frame | string[] | integer[] | Phaser.Textures.Frame[], visible?: boolean): Phaser.GameObjects.Bob[];
 
             /**
              * Checks if the given child can render or not, by checking its `visible` and `alpha` values.
              * @param child The Bob to check for rendering.
              */
-            childCanRender(child: Phaser.GameObjects.Blitter.Bob): boolean;
+            childCanRender(child: Phaser.GameObjects.Bob): boolean;
 
             /**
              * Returns an array of Bobs to be rendered.
              * If the Blitter is dirty then a new list is generated and stored in `renderList`.
              */
-            getRenderList(): Phaser.GameObjects.Blitter.Bob[];
+            getRenderList(): Phaser.GameObjects.Bob[];
 
             /**
              * Removes all Bobs from the children List and clears the dirty flag.
@@ -13050,6 +12457,155 @@ declare namespace Phaser {
              * @param value The visible state of the Game Object.
              */
             setVisible(value: boolean): this;
+
+        }
+
+        /**
+         * A Bob Game Object.
+         * 
+         * A Bob belongs to a Blitter Game Object. The Blitter is responsible for managing and rendering this object.
+         * 
+         * A Bob has a position, alpha value and a frame from a texture that it uses to render with. You can also toggle
+         * the flipped and visible state of the Bob. The Frame the Bob uses to render can be changed dynamically, but it
+         * must be a Frame within the Texture used by the parent Blitter.
+         * 
+         * Bob positions are relative to the Blitter parent. So if you move the Blitter parent, all Bob children will
+         * have their positions impacted by this change as well.
+         * 
+         * You can manipulate Bob objects directly from your game code, but the creation and destruction of them should be
+         * handled via the Blitter parent.
+         */
+        class Bob {
+            /**
+             * 
+             * @param blitter The parent Blitter object is responsible for updating this Bob.
+             * @param x The horizontal position of this Game Object in the world, relative to the parent Blitter position.
+             * @param y The vertical position of this Game Object in the world, relative to the parent Blitter position.
+             * @param frame The Frame this Bob will render with, as defined in the Texture the parent Blitter is using.
+             * @param visible Should the Bob render visible or not to start with?
+             */
+            constructor(blitter: Phaser.GameObjects.Blitter, x: number, y: number, frame: string | integer, visible: boolean);
+
+            /**
+             * The Blitter object that this Bob belongs to.
+             */
+            parent: Phaser.GameObjects.Blitter;
+
+            /**
+             * The x position of this Bob, relative to the x position of the Blitter.
+             */
+            x: number;
+
+            /**
+             * The y position of this Bob, relative to the y position of the Blitter.
+             */
+            y: number;
+
+            /**
+             * The frame that the Bob uses to render with.
+             * To change the frame use the `Bob.setFrame` method.
+             */
+            protected frame: Phaser.Textures.Frame;
+
+            /**
+             * A blank object which can be used to store data related to this Bob in.
+             */
+            data: object;
+
+            /**
+             * The horizontally flipped state of the Bob.
+             * A Bob that is flipped horizontally will render inversed on the horizontal axis.
+             * Flipping always takes place from the middle of the texture.
+             */
+            flipX: boolean;
+
+            /**
+             * The vertically flipped state of the Bob.
+             * A Bob that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
+             * Flipping always takes place from the middle of the texture.
+             */
+            flipY: boolean;
+
+            /**
+             * Changes the Texture Frame being used by this Bob.
+             * The frame must be part of the Texture the parent Blitter is using.
+             * If no value is given it will use the default frame of the Blitter parent.
+             * @param frame The frame to be used during rendering.
+             */
+            setFrame(frame?: string | integer | Phaser.Textures.Frame): Phaser.GameObjects.Bob;
+
+            /**
+             * Resets the horizontal and vertical flipped state of this Bob back to their default un-flipped state.
+             */
+            resetFlip(): Phaser.GameObjects.Bob;
+
+            /**
+             * Resets this Bob.
+             * 
+             * Changes the position to the values given, and optionally changes the frame.
+             * 
+             * Also resets the flipX and flipY values, sets alpha back to 1 and visible to true.
+             * @param x The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
+             * @param y The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
+             * @param frame The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
+             */
+            reset(x: number, y: number, frame?: string | integer | Phaser.Textures.Frame): Phaser.GameObjects.Bob;
+
+            /**
+             * Sets the horizontal flipped state of this Bob.
+             * @param value The flipped state. `false` for no flip, or `true` to be flipped.
+             */
+            setFlipX(value: boolean): Phaser.GameObjects.Bob;
+
+            /**
+             * Sets the vertical flipped state of this Bob.
+             * @param value The flipped state. `false` for no flip, or `true` to be flipped.
+             */
+            setFlipY(value: boolean): Phaser.GameObjects.Bob;
+
+            /**
+             * Sets the horizontal and vertical flipped state of this Bob.
+             * @param x The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+             * @param y The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+             */
+            setFlip(x: boolean, y: boolean): Phaser.GameObjects.Bob;
+
+            /**
+             * Sets the visibility of this Bob.
+             * 
+             * An invisible Bob will skip rendering.
+             * @param value The visible state of the Game Object.
+             */
+            setVisible(value: boolean): Phaser.GameObjects.Bob;
+
+            /**
+             * Set the Alpha level of this Bob. The alpha controls the opacity of the Game Object as it renders.
+             * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+             * 
+             * A Bob with alpha 0 will skip rendering.
+             * @param value The alpha value used for this Bob. Between 0 and 1.
+             */
+            setAlpha(value: number): Phaser.GameObjects.Bob;
+
+            /**
+             * Destroys this Bob instance.
+             * Removes itself from the Blitter and clears the parent, frame and data properties.
+             */
+            destroy(): void;
+
+            /**
+             * The visible state of the Bob.
+             * 
+             * An invisible Bob will skip rendering.
+             */
+            visible: boolean;
+
+            /**
+             * The alpha value of the Bob, between 0 and 1.
+             * 
+             * A Bob with alpha 0 will skip rendering.
+             */
+            alpha: number;
 
         }
 
@@ -15542,7 +15098,7 @@ declare namespace Phaser {
              * 
              * Listen for it on a Game Object instance using `GameObject.on('destroy', listener)`.
              */
-            var DESTROY: any;
+            const DESTROY: any;
 
         }
 
@@ -15552,10 +15108,12 @@ declare namespace Phaser {
          * 
          * When you create an Extern and place it in the display list of a Scene, the renderer will
          * process the list as usual. When it finds an Extern it will flush the current batch,
-         * clear down the pipeline and prepare a transform matrix which you render function can take advantage of, if required.
-         * The WebGL context is left is a 'clean' state, ready for you to bind your own shaders,
+         * clear down the pipeline and prepare a transform matrix which your render function can
+         * take advantage of, if required.
+         * 
+         * The WebGL context is then left is a 'clean' state, ready for you to bind your own shaders,
          * or draw to it, whatever you wish to do. Once you've finished, you should free-up any
-         * of your resources. The Extern will then rebind the Phaser pipline and carry on with
+         * of your resources. The Extern will then rebind the Phaser pipeline and carry on 
          * rendering the display list.
          * 
          * Although this object has lots of properties such as Alpha, Blend Mode and Tint, none of
@@ -19848,6 +19406,12 @@ declare namespace Phaser {
              * Fill or additive mode used when blending the color values?
              */
             tintFill: boolean;
+
+            /**
+             * This method is left intentionally empty and does not do anything.
+             * It is retained to allow a Mesh or Quad to be added to a Container.
+             */
+            setAlpha(): void;
 
             /**
              * Sets the Blend Mode being used by this Game Object.
@@ -33564,7 +33128,7 @@ declare namespace Phaser {
              * Calculates the ascent, descent and fontSize of a given font style.
              * @param textStyle The TextStyle object to measure.
              */
-            static MeasureText(textStyle: Phaser.GameObjects.Text.TextStyle): object;
+            static MeasureText(textStyle: Phaser.GameObjects.TextStyle): object;
 
             /**
              * The renderer in use by this Text object.
@@ -34680,6 +34244,357 @@ declare namespace Phaser {
         }
 
         /**
+         * A TextStyle class manages all of the style settings for a Text object.
+         * 
+         * Text Game Objects create a TextStyle instance automatically, which is
+         * accessed via the `Text.style` property. You do not normally need to
+         * instantiate one yourself.
+         */
+        class TextStyle {
+            /**
+             * 
+             * @param text The Text object that this TextStyle is styling.
+             * @param style The style settings to set.
+             */
+            constructor(text: Phaser.GameObjects.Text, style: object);
+
+            /**
+             * The Text object that this TextStyle is styling.
+             */
+            parent: Phaser.GameObjects.Text;
+
+            /**
+             * The font family.
+             */
+            fontFamily: string;
+
+            /**
+             * The font size.
+             */
+            fontSize: string;
+
+            /**
+             * The font style.
+             */
+            fontStyle: string;
+
+            /**
+             * The background color.
+             */
+            backgroundColor: string;
+
+            /**
+             * The text fill color.
+             */
+            color: string;
+
+            /**
+             * The text stroke color.
+             */
+            stroke: string;
+
+            /**
+             * The text stroke thickness.
+             */
+            strokeThickness: number;
+
+            /**
+             * The horizontal shadow offset.
+             */
+            shadowOffsetX: number;
+
+            /**
+             * The vertical shadow offset.
+             */
+            shadowOffsetY: number;
+
+            /**
+             * The shadow color.
+             */
+            shadowColor: string;
+
+            /**
+             * The shadow blur radius.
+             */
+            shadowBlur: number;
+
+            /**
+             * Whether shadow stroke is enabled or not.
+             */
+            shadowStroke: boolean;
+
+            /**
+             * Whether shadow fill is enabled or not.
+             */
+            shadowFill: boolean;
+
+            /**
+             * The text alignment.
+             */
+            align: string;
+
+            /**
+             * The maximum number of lines to draw.
+             */
+            maxLines: integer;
+
+            /**
+             * The fixed width of the text.
+             * 
+             * `0` means no fixed with.
+             */
+            fixedWidth: number;
+
+            /**
+             * The fixed height of the text.
+             * 
+             * `0` means no fixed height.
+             */
+            fixedHeight: number;
+
+            /**
+             * The resolution the text is rendered to its internal canvas at.
+             * The default is 0, which means it will use the resolution set in the Game Config.
+             */
+            resolution: number;
+
+            /**
+             * Whether the text should render right to left.
+             */
+            rtl: boolean;
+
+            /**
+             * The test string to use when measuring the font.
+             */
+            testString: string;
+
+            /**
+             * The amount of horizontal padding adding to the width of the text when calculating the font metrics.
+             */
+            baselineX: number;
+
+            /**
+             * The amount of vertical padding adding to the width of the text when calculating the font metrics.
+             */
+            baselineY: number;
+
+            /**
+             * Set the text style.
+             * @param style The style settings to set.
+             * @param updateText Whether to update the text immediately. Default true.
+             * @param setDefaults Use the default values is not set, or the local values. Default false.
+             */
+            setStyle(style: object, updateText?: boolean, setDefaults?: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Synchronize the font settings to the given Canvas Rendering Context.
+             * @param canvas The Canvas Element.
+             * @param context The Canvas Rendering Context.
+             */
+            syncFont(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
+
+            /**
+             * Synchronize the text style settings to the given Canvas Rendering Context.
+             * @param canvas The Canvas Element.
+             * @param context The Canvas Rendering Context.
+             */
+            syncStyle(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
+
+            /**
+             * Synchronize the shadow settings to the given Canvas Rendering Context.
+             * @param context The Canvas Rendering Context.
+             * @param enabled Whether shadows are enabled or not.
+             */
+            syncShadow(context: CanvasRenderingContext2D, enabled: boolean): void;
+
+            /**
+             * Update the style settings for the parent Text object.
+             * @param recalculateMetrics Whether to recalculate font and text metrics.
+             */
+            update(recalculateMetrics: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Set the font.
+             * 
+             * If a string is given, the font family is set.
+             * 
+             * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
+             * properties of that object are set.
+             * @param font The font family or font settings to set.
+             * @param updateText Whether to update the text immediately. Default true.
+             */
+            setFont(font: string | object, updateText?: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Set the font family.
+             * @param family The font family.
+             */
+            setFontFamily(family: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the font style.
+             * @param style The font style.
+             */
+            setFontStyle(style: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the font size.
+             * @param size The font size.
+             */
+            setFontSize(size: number | string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the test string to use when measuring the font.
+             * @param string The test string to use when measuring the font.
+             */
+            setTestString(string: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set a fixed width and height for the text.
+             * 
+             * Pass in `0` for either of these parameters to disable fixed width or height respectively.
+             * @param width The fixed width to set.
+             * @param height The fixed height to set.
+             */
+            setFixedSize(width: number, height: number): Phaser.GameObjects.Text;
+
+            /**
+             * Set the background color.
+             * @param color The background color.
+             */
+            setBackgroundColor(color: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the text fill color.
+             * @param color The text fill color.
+             */
+            setFill(color: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the text fill color.
+             * @param color The text fill color.
+             */
+            setColor(color: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the resolution used by the Text object.
+             * 
+             * By default it will be set to match the resolution set in the Game Config,
+             * but you can override it via this method. It allows for much clearer text on High DPI devices,
+             * at the cost of memory because it uses larger internal Canvas textures for the Text.
+             * 
+             * Please use with caution, as the more high res Text you have, the more memory it uses up.
+             * @param value The resolution for this Text object to use.
+             */
+            setResolution(value: number): Phaser.GameObjects.Text;
+
+            /**
+             * Set the stroke settings.
+             * @param color The stroke color.
+             * @param thickness The stroke thickness.
+             */
+            setStroke(color: string, thickness: number): Phaser.GameObjects.Text;
+
+            /**
+             * Set the shadow settings.
+             * 
+             * Calling this method always re-measures the parent Text object,
+             * so only call it when you actually change the shadow settings.
+             * @param x The horizontal shadow offset. Default 0.
+             * @param y The vertical shadow offset. Default 0.
+             * @param color The shadow color. Default '#000'.
+             * @param blur The shadow blur radius. Default 0.
+             * @param shadowStroke Whether to stroke the shadow. Default false.
+             * @param shadowFill Whether to fill the shadow. Default true.
+             */
+            setShadow(x?: number, y?: number, color?: string, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Set the shadow offset.
+             * @param x The horizontal shadow offset. Default 0.
+             * @param y The vertical shadow offset. Default 0.
+             */
+            setShadowOffset(x?: number, y?: number): Phaser.GameObjects.Text;
+
+            /**
+             * Set the shadow color.
+             * @param color The shadow color. Default '#000'.
+             */
+            setShadowColor(color?: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the shadow blur radius.
+             * @param blur The shadow blur radius. Default 0.
+             */
+            setShadowBlur(blur?: number): Phaser.GameObjects.Text;
+
+            /**
+             * Enable or disable shadow stroke.
+             * @param enabled Whether shadow stroke is enabled or not.
+             */
+            setShadowStroke(enabled: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Enable or disable shadow fill.
+             * @param enabled Whether shadow fill is enabled or not.
+             */
+            setShadowFill(enabled: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Set the width (in pixels) to use for wrapping lines.
+             * 
+             * Pass in null to remove wrapping by width.
+             * @param width The maximum width of a line in pixels. Set to null to remove wrapping.
+             * @param useAdvancedWrap Whether or not to use the advanced wrapping
+             * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
+             * spaces and whitespace are left as is. Default false.
+             */
+            setWordWrapWidth(width: number, useAdvancedWrap?: boolean): Phaser.GameObjects.Text;
+
+            /**
+             * Set a custom callback for wrapping lines.
+             * 
+             * Pass in null to remove wrapping by callback.
+             * @param callback A custom function that will be responsible for wrapping the
+             * text. It will receive two arguments: text (the string to wrap), textObject (this Text
+             * instance). It should return the wrapped lines either as an array of lines or as a string with
+             * newline characters in place to indicate where breaks should happen.
+             * @param scope The scope that will be applied when the callback is invoked. Default null.
+             */
+            setWordWrapCallback(callback: TextStyleWordWrapCallback, scope?: object): Phaser.GameObjects.Text;
+
+            /**
+             * Set the text alignment.
+             * 
+             * Expects values like `'left'`, `'right'`, `'center'` or `'justified'`.
+             * @param align The text alignment.
+             */
+            setAlign(align: string): Phaser.GameObjects.Text;
+
+            /**
+             * Set the maximum number of lines to draw.
+             * @param max The maximum number of lines to draw. Default 0.
+             */
+            setMaxLines(max?: integer): Phaser.GameObjects.Text;
+
+            /**
+             * Get the current text metrics.
+             */
+            getTextMetrics(): BitmapTextMetrics;
+
+            /**
+             * Build a JSON representation of this Text Style.
+             */
+            toJSON(): object;
+
+            /**
+             * Destroy this Text Style.
+             */
+            destroy(): void;
+
+        }
+
+        /**
          * A TileSprite is a Sprite that has a repeating texture.
          * 
          * The texture can be scrolled and scaled independently of the TileSprite itself. Textures will automatically wrap and
@@ -34803,8 +34718,8 @@ declare namespace Phaser {
 
             /**
              * Sets {@link Phaser.GameObjects.TileSprite#tileScaleX} and {@link Phaser.GameObjects.TileSprite#tileScaleY}.
-             * @param x The horizontal scale of the tiling texture.
-             * @param y The vertical scale of the tiling texture.
+             * @param x The horizontal scale of the tiling texture. If not given it will use the current `tileScaleX` value.
+             * @param y The vertical scale of the tiling texture. If not given it will use the `x` value. Default x.
              */
             setTileScale(x?: number, y?: number): this;
 
@@ -38228,14 +38143,14 @@ declare namespace Phaser {
              * 
              * This internal event is dispatched by the Input Plugin when it boots, signalling to all of its systems to create themselves.
              */
-            var BOOT: any;
+            const BOOT: any;
 
             /**
              * The Input Plugin Destroy Event.
              * 
              * This internal event is dispatched by the Input Plugin when it is destroyed, signalling to all of its systems to destroy themselves.
              */
-            var DESTROY: any;
+            const DESTROY: any;
 
             /**
              * The Pointer Drag End Input Event.
@@ -38246,7 +38161,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_END]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG_END} event instead.
              */
-            var DRAG_END: any;
+            const DRAG_END: any;
 
             /**
              * The Pointer Drag Enter Input Event.
@@ -38259,7 +38174,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_ENTER]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG_ENTER} event instead.
              */
-            var DRAG_ENTER: any;
+            const DRAG_ENTER: any;
 
             /**
              * The Pointer Drag Input Event.
@@ -38272,7 +38187,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG} event instead.
              */
-            var DRAG: any;
+            const DRAG: any;
 
             /**
              * The Pointer Drag Leave Input Event.
@@ -38285,7 +38200,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_LEAVE]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG_LEAVE} event instead.
              */
-            var DRAG_LEAVE: any;
+            const DRAG_LEAVE: any;
 
             /**
              * The Pointer Drag Over Input Event.
@@ -38301,7 +38216,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_OVER]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG_OVER} event instead.
              */
-            var DRAG_OVER: any;
+            const DRAG_OVER: any;
 
             /**
              * The Pointer Drag Start Input Event.
@@ -38314,7 +38229,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_START]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG_START} event instead.
              */
-            var DRAG_START: any;
+            const DRAG_START: any;
 
             /**
              * The Pointer Drop Input Event.
@@ -38325,7 +38240,7 @@ declare namespace Phaser {
              * 
              * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DROP]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DROP} event instead.
              */
-            var DROP: any;
+            const DROP: any;
 
             /**
              * The Game Object Down Input Event.
@@ -38348,7 +38263,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_DOWN: any;
+            const GAMEOBJECT_DOWN: any;
 
             /**
              * The Game Object Drag End Event.
@@ -38361,7 +38276,7 @@ declare namespace Phaser {
              * To receive this event, the Game Object must have been set as interactive and enabled for drag.
              * See [GameObject.setInteractive](Phaser.GameObjects.GameObject#setInteractive) for more details.
              */
-            var GAMEOBJECT_DRAG_END: any;
+            const GAMEOBJECT_DRAG_END: any;
 
             /**
              * The Game Object Drag Enter Event.
@@ -38374,7 +38289,7 @@ declare namespace Phaser {
              * To receive this event, the Game Object must have been set as interactive and enabled for drag.
              * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
              */
-            var GAMEOBJECT_DRAG_ENTER: any;
+            const GAMEOBJECT_DRAG_ENTER: any;
 
             /**
              * The Game Object Drag Event.
@@ -38387,7 +38302,7 @@ declare namespace Phaser {
              * To receive this event, the Game Object must have been set as interactive and enabled for drag.
              * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
              */
-            var GAMEOBJECT_DRAG: any;
+            const GAMEOBJECT_DRAG: any;
 
             /**
              * The Game Object Drag Leave Event.
@@ -38400,7 +38315,7 @@ declare namespace Phaser {
              * To receive this event, the Game Object must have been set as interactive and enabled for drag.
              * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
              */
-            var GAMEOBJECT_DRAG_LEAVE: any;
+            const GAMEOBJECT_DRAG_LEAVE: any;
 
             /**
              * The Game Object Drag Over Event.
@@ -38416,7 +38331,7 @@ declare namespace Phaser {
              * To receive this event, the Game Object must have been set as interactive and enabled for drag.
              * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
              */
-            var GAMEOBJECT_DRAG_OVER: any;
+            const GAMEOBJECT_DRAG_OVER: any;
 
             /**
              * The Game Object Drag Start Event.
@@ -38432,7 +38347,7 @@ declare namespace Phaser {
              * There are lots of useful drag related properties that are set within the Game Object when dragging occurs.
              * For example, `gameObject.input.dragStartX`, `dragStartY` and so on.
              */
-            var GAMEOBJECT_DRAG_START: any;
+            const GAMEOBJECT_DRAG_START: any;
 
             /**
              * The Game Object Drop Event.
@@ -38445,7 +38360,7 @@ declare namespace Phaser {
              * To receive this event, the Game Object must have been set as interactive and enabled for drag.
              * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
              */
-            var GAMEOBJECT_DROP: any;
+            const GAMEOBJECT_DROP: any;
 
             /**
              * The Game Object Move Input Event.
@@ -38468,7 +38383,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_MOVE: any;
+            const GAMEOBJECT_MOVE: any;
 
             /**
              * The Game Object Out Input Event.
@@ -38491,7 +38406,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_OUT: any;
+            const GAMEOBJECT_OUT: any;
 
             /**
              * The Game Object Over Input Event.
@@ -38514,7 +38429,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_OVER: any;
+            const GAMEOBJECT_OVER: any;
 
             /**
              * The Game Object Pointer Down Event.
@@ -38536,7 +38451,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_POINTER_DOWN: any;
+            const GAMEOBJECT_POINTER_DOWN: any;
 
             /**
              * The Game Object Pointer Move Event.
@@ -38558,7 +38473,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_POINTER_MOVE: any;
+            const GAMEOBJECT_POINTER_MOVE: any;
 
             /**
              * The Game Object Pointer Out Event.
@@ -38580,7 +38495,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_POINTER_OUT: any;
+            const GAMEOBJECT_POINTER_OUT: any;
 
             /**
              * The Game Object Pointer Over Event.
@@ -38602,7 +38517,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_POINTER_OVER: any;
+            const GAMEOBJECT_POINTER_OVER: any;
 
             /**
              * The Game Object Pointer Up Event.
@@ -38624,7 +38539,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_POINTER_UP: any;
+            const GAMEOBJECT_POINTER_UP: any;
 
             /**
              * The Game Object Up Input Event.
@@ -38647,7 +38562,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var GAMEOBJECT_UP: any;
+            const GAMEOBJECT_UP: any;
 
             /**
              * The Input Plugin Game Out Event.
@@ -38657,7 +38572,7 @@ declare namespace Phaser {
              * 
              * Listen to this event from within a Scene using: `this.input.on('gameout', listener)`.
              */
-            var GAME_OUT: any;
+            const GAME_OUT: any;
 
             /**
              * The Input Plugin Game Over Event.
@@ -38667,14 +38582,14 @@ declare namespace Phaser {
              * 
              * Listen to this event from within a Scene using: `this.input.on('gameover', listener)`.
              */
-            var GAME_OVER: any;
+            const GAME_OVER: any;
 
             /**
              * The Input Manager Boot Event.
              * 
              * This internal event is dispatched by the Input Manager when it boots.
              */
-            var MANAGER_BOOT: any;
+            const MANAGER_BOOT: any;
 
             /**
              * The Input Manager Process Event.
@@ -38682,21 +38597,21 @@ declare namespace Phaser {
              * This internal event is dispatched by the Input Manager when not using the legacy queue system,
              * and it wants the Input Plugins to update themselves.
              */
-            var MANAGER_PROCESS: any;
+            const MANAGER_PROCESS: any;
 
             /**
              * The Input Manager Update Event.
              * 
              * This internal event is dispatched by the Input Manager as part of its update step.
              */
-            var MANAGER_UPDATE: any;
+            const MANAGER_UPDATE: any;
 
             /**
              * The Input Manager Pointer Lock Change Event.
              * 
              * This event is dispatched by the Input Manager when it is processing a native Pointer Lock Change DOM Event.
              */
-            var POINTERLOCK_CHANGE: any;
+            const POINTERLOCK_CHANGE: any;
 
             /**
              * The Pointer Down Input Event.
@@ -38714,7 +38629,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_DOWN: any;
+            const POINTER_DOWN: any;
 
             /**
              * The Pointer Down Outside Input Event.
@@ -38732,7 +38647,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_DOWN_OUTSIDE: any;
+            const POINTER_DOWN_OUTSIDE: any;
 
             /**
              * The Pointer Move Input Event.
@@ -38750,7 +38665,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_MOVE: any;
+            const POINTER_MOVE: any;
 
             /**
              * The Pointer Out Input Event.
@@ -38768,7 +38683,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_OUT: any;
+            const POINTER_OUT: any;
 
             /**
              * The Pointer Over Input Event.
@@ -38786,7 +38701,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_OVER: any;
+            const POINTER_OVER: any;
 
             /**
              * The Pointer Up Input Event.
@@ -38804,7 +38719,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_UP: any;
+            const POINTER_UP: any;
 
             /**
              * The Pointer Up Outside Input Event.
@@ -38822,7 +38737,7 @@ declare namespace Phaser {
              * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
              * the propagation of this event.
              */
-            var POINTER_UP_OUTSIDE: any;
+            const POINTER_UP_OUTSIDE: any;
 
             /**
              * The Input Plugin Pre-Update Event.
@@ -38830,14 +38745,14 @@ declare namespace Phaser {
              * This internal event is dispatched by the Input Plugin at the start of its `preUpdate` method.
              * This hook is designed specifically for input plugins, but can also be listened to from user-land code.
              */
-            var PRE_UPDATE: any;
+            const PRE_UPDATE: any;
 
             /**
              * The Input Plugin Shutdown Event.
              * 
              * This internal event is dispatched by the Input Plugin when it shuts down, signalling to all of its systems to shut themselves down.
              */
-            var SHUTDOWN: any;
+            const SHUTDOWN: any;
 
             /**
              * The Input Plugin Start Event.
@@ -38845,7 +38760,7 @@ declare namespace Phaser {
              * This internal event is dispatched by the Input Plugin when it has finished setting-up,
              * signalling to all of its internal systems to start.
              */
-            var START: any;
+            const START: any;
 
             /**
              * The Input Plugin Update Event.
@@ -38853,7 +38768,7 @@ declare namespace Phaser {
              * This internal event is dispatched by the Input Plugin at the start of its `update` method.
              * This hook is designed specifically for input plugins, but can also be listened to from user-land code.
              */
-            var UPDATE: any;
+            const UPDATE: any;
 
         }
 
@@ -38988,7 +38903,7 @@ declare namespace Phaser {
                  * 
                  * You can also listen for a DOWN event from a Gamepad instance. See the [GAMEPAD_BUTTON_DOWN]{@linkcode Phaser.Input.Gamepad.Events#event:GAMEPAD_BUTTON_DOWN} event for details.
                  */
-                var BUTTON_DOWN: any;
+                const BUTTON_DOWN: any;
 
                 /**
                  * The Gamepad Button Up Event.
@@ -38999,7 +38914,7 @@ declare namespace Phaser {
                  * 
                  * You can also listen for an UP event from a Gamepad instance. See the [GAMEPAD_BUTTON_UP]{@linkcode Phaser.Input.Gamepad.Events#event:GAMEPAD_BUTTON_UP} event for details.
                  */
-                var BUTTON_UP: any;
+                const BUTTON_UP: any;
 
                 /**
                  * The Gamepad Connected Event.
@@ -39013,7 +38928,7 @@ declare namespace Phaser {
                  * 'connected' event and instead should check `GamepadPlugin.total` to see if it thinks there are any gamepads
                  * already connected.
                  */
-                var CONNECTED: any;
+                const CONNECTED: any;
 
                 /**
                  * The Gamepad Disconnected Event.
@@ -39022,7 +38937,7 @@ declare namespace Phaser {
                  * 
                  * Listen to this event from within a Scene using: `this.input.gamepad.once('disconnected', listener)`.
                  */
-                var DISCONNECTED: any;
+                const DISCONNECTED: any;
 
                 /**
                  * The Gamepad Button Down Event.
@@ -39036,7 +38951,7 @@ declare namespace Phaser {
                  * 
                  * You can also listen for a DOWN event from the Gamepad Plugin. See the [BUTTON_DOWN]{@linkcode Phaser.Input.Gamepad.Events#event:BUTTON_DOWN} event for details.
                  */
-                var GAMEPAD_BUTTON_DOWN: any;
+                const GAMEPAD_BUTTON_DOWN: any;
 
                 /**
                  * The Gamepad Button Up Event.
@@ -39050,7 +38965,7 @@ declare namespace Phaser {
                  * 
                  * You can also listen for an UP event from the Gamepad Plugin. See the [BUTTON_UP]{@linkcode Phaser.Input.Gamepad.Events#event:BUTTON_UP} event for details.
                  */
-                var GAMEPAD_BUTTON_UP: any;
+                const GAMEPAD_BUTTON_UP: any;
 
             }
 
@@ -39455,7 +39370,7 @@ declare namespace Phaser {
              * A reference to the global Game Scale Manager.
              * Used for all bounds checks and pointer scaling.
              */
-            scaleManager: Phaser.DOM.ScaleManager;
+            scaleManager: Phaser.Scale.ScaleManager;
 
             /**
              * The Canvas that is used for all DOM event input listeners.
@@ -39575,6 +39490,12 @@ declare namespace Phaser {
              * compatibility. This flag, along with the legacy system, will be removed in a future version.
              */
             useQueue: boolean;
+
+            /**
+             * The time this Input Manager was last updated.
+             * This value is populated by the Game Step each frame.
+             */
+            readonly time: number;
 
             /**
              * The Boot handler is called by Phaser.Game when it first starts up.
@@ -40567,7 +40488,7 @@ declare namespace Phaser {
                  * For example, the Chrome extension vimium is known to disable Phaser from using the D key, while EverNote disables the backtick key.
                  * There are others. So, please check your extensions if you find you have specific keys that don't work.
                  */
-                var ANY_KEY_DOWN: any;
+                const ANY_KEY_DOWN: any;
 
                 /**
                  * The Global Key Up Event.
@@ -40580,7 +40501,7 @@ declare namespace Phaser {
                  * 
                  * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.UP]{@linkcode Phaser.Input.Keyboard.Events#event:UP} for details.
                  */
-                var ANY_KEY_UP: any;
+                const ANY_KEY_UP: any;
 
                 /**
                  * The Key Combo Match Event.
@@ -40597,7 +40518,7 @@ declare namespace Phaser {
                  * });
                  * ```
                  */
-                var COMBO_MATCH: any;
+                const COMBO_MATCH: any;
 
                 /**
                  * The Key Down Event.
@@ -40614,7 +40535,7 @@ declare namespace Phaser {
                  * 
                  * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_DOWN]{@linkcode Phaser.Input.Keyboard.Events#event:ANY_KEY_DOWN} for details.
                  */
-                var DOWN: any;
+                const DOWN: any;
 
                 /**
                  * The Key Down Event.
@@ -40637,7 +40558,7 @@ declare namespace Phaser {
                  * For example, the Chrome extension vimium is known to disable Phaser from using the D key, while EverNote disables the backtick key.
                  * There are others. So, please check your extensions if you find you have specific keys that don't work.
                  */
-                var KEY_DOWN: any;
+                const KEY_DOWN: any;
 
                 /**
                  * The Key Up Event.
@@ -40653,7 +40574,7 @@ declare namespace Phaser {
                  * 
                  * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.UP]{@linkcode Phaser.Input.Keyboard.Events#event:UP} for details.
                  */
-                var KEY_UP: any;
+                const KEY_UP: any;
 
                 /**
                  * The Key Up Event.
@@ -40670,7 +40591,7 @@ declare namespace Phaser {
                  * 
                  * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_UP]{@linkcode Phaser.Input.Keyboard.Events#event:ANY_KEY_UP} for details.
                  */
-                var UP: any;
+                const UP: any;
 
             }
 
@@ -41130,7 +41051,7 @@ declare namespace Phaser {
 
                 /**
                  * Resets all Key objects created by _this_ Keyboard Plugin back to their default un-pressed states.
-                 * This can only reset keys created via the `addKey`, `addKeys` or `createCursors` methods.
+                 * This can only reset keys created via the `addKey`, `addKeys` or `createCursorKeys` methods.
                  * If you have created a Key object directly you'll need to reset it yourself.
                  * 
                  * This method is called automatically when the Keyboard Plugin shuts down, but can be
@@ -42151,7 +42072,7 @@ declare namespace Phaser {
              * 
              * If you add lots of files to a Loader from a `preload` method, it will dispatch this event for each one of them.
              */
-            var ADD: any;
+            const ADD: any;
 
             /**
              * The Loader Plugin Complete Event.
@@ -42161,7 +42082,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('complete', listener)`.
              */
-            var COMPLETE: any;
+            const COMPLETE: any;
 
             /**
              * The File Load Complete Event.
@@ -42172,7 +42093,7 @@ declare namespace Phaser {
              * 
              * You can also listen for the completion of a specific file. See the [FILE_KEY_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_KEY_COMPLETE} event.
              */
-            var FILE_COMPLETE: any;
+            const FILE_COMPLETE: any;
 
             /**
              * The File Load Complete Event.
@@ -42208,7 +42129,7 @@ declare namespace Phaser {
              * 
              * You can also listen for the generic completion of files. See the [FILE_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_COMPLETE} event.
              */
-            var FILE_KEY_COMPLETE: any;
+            const FILE_KEY_COMPLETE: any;
 
             /**
              * The File Load Error Event.
@@ -42217,7 +42138,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('loaderror', listener)`.
              */
-            var FILE_LOAD_ERROR: any;
+            const FILE_LOAD_ERROR: any;
 
             /**
              * The File Load Event.
@@ -42227,7 +42148,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('load', listener)`.
              */
-            var FILE_LOAD: any;
+            const FILE_LOAD: any;
 
             /**
              * The File Load Progress Event.
@@ -42237,7 +42158,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('fileprogress', listener)`.
              */
-            var FILE_PROGRESS: any;
+            const FILE_PROGRESS: any;
 
             /**
              * The Loader Plugin Post Process Event.
@@ -42250,7 +42171,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('postprocess', listener)`.
              */
-            var POST_PROCESS: any;
+            const POST_PROCESS: any;
 
             /**
              * The Loader Plugin Progress Event.
@@ -42259,7 +42180,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('progress', listener)`.
              */
-            var PROGRESS: any;
+            const PROGRESS: any;
 
             /**
              * The Loader Plugin Start Event.
@@ -42270,7 +42191,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.load.on('start', listener)`.
              */
-            var START: any;
+            const START: any;
 
         }
 
@@ -42725,6 +42646,17 @@ declare namespace Phaser {
                  * @param jsonXhrSettings An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
                  */
                 constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioSpriteFileConfig, jsonURL: string, audioURL?: Object, audioConfig?: any, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called by each File when it finishes loading.
+                 * @param file The File that has completed processing.
+                 */
+                onFileComplete(file: Phaser.Loader.File): void;
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
 
             }
 
@@ -43210,6 +43142,17 @@ declare namespace Phaser {
                  * @param textureXhrSettings Extra XHR Settings specifically for the texture files.
                  */
                 constructor(loader: Phaser.Loader.LoaderPlugin, key: string, atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: XHRSettingsObject, textureXhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called by each File when it finishes loading.
+                 * @param file The File that has completed processing.
+                 */
+                onFileComplete(file: Phaser.Loader.File): void;
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
 
             }
 
@@ -43867,6 +43810,32 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
+
+        }
+
+        namespace FileTypesManager {
+            /**
+             * Static method called when a LoaderPlugin is created.
+             * 
+             * Loops through the local types object and injects all of them as
+             * properties into the LoaderPlugin instance.
+             * @param loader The LoaderPlugin to install the types into.
+             */
+            function install(loader: Phaser.Loader.LoaderPlugin): void;
+
+            /**
+             * Static method called directly by the File Types.
+             * 
+             * The key is a reference to the function used to load the files via the Loader, i.e. `image`.
+             * @param key The key that will be used as the method name in the LoaderPlugin.
+             * @param factoryFunction The function that will be called when LoaderPlugin.key is invoked.
+             */
+            function register(key: string, factoryFunction: Function): void;
+
+            /**
+             * Removed all associated file types.
+             */
+            function destroy(): void;
 
         }
 
@@ -52270,7 +52239,7 @@ declare namespace Phaser {
                  * 
                  * Please note that 'collide' and 'overlap' are two different things in Arcade Physics.
                  */
-                var COLLIDE: any;
+                const COLLIDE: any;
 
                 /**
                  * The Arcade Physics World Overlap Event.
@@ -52284,7 +52253,7 @@ declare namespace Phaser {
                  * 
                  * Please note that 'collide' and 'overlap' are two different things in Arcade Physics.
                  */
-                var OVERLAP: any;
+                const OVERLAP: any;
 
                 /**
                  * The Arcade Physics World Pause Event.
@@ -52293,7 +52262,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.physics.world.on('pause', listener)`.
                  */
-                var PAUSE: any;
+                const PAUSE: any;
 
                 /**
                  * The Arcade Physics World Resume Event.
@@ -52302,7 +52271,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.physics.world.on('resume', listener)`.
                  */
-                var RESUME: any;
+                const RESUME: any;
 
                 /**
                  * The Arcade Physics Tile Collide Event.
@@ -52316,7 +52285,7 @@ declare namespace Phaser {
                  * 
                  * Please note that 'collide' and 'overlap' are two different things in Arcade Physics.
                  */
-                var TILE_COLLIDE: any;
+                const TILE_COLLIDE: any;
 
                 /**
                  * The Arcade Physics Tile Overlap Event.
@@ -52330,7 +52299,7 @@ declare namespace Phaser {
                  * 
                  * Please note that 'collide' and 'overlap' are two different things in Arcade Physics.
                  */
-                var TILE_OVERLAP: any;
+                const TILE_OVERLAP: any;
 
                 /**
                  * The Arcade Physics World Bounds Event.
@@ -52342,7 +52311,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.physics.world.on('worldbounds', listener)`.
                  */
-                var WORLD_BOUNDS: any;
+                const WORLD_BOUNDS: any;
 
             }
 
@@ -52501,10 +52470,11 @@ declare namespace Phaser {
                 world: Phaser.Physics.Arcade.World;
 
                 /**
-                 * The class to create new group members from.
-                 * This should be ArcadeImage, ArcadeSprite, or a class extending one of those.
+                 * The class to create new Group members from.
+                 * 
+                 * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
                  */
-                classType: Phaser.Physics.Arcade.Image | Phaser.Physics.Arcade.Sprite;
+                classType: GroupClassTypeConstructor;
 
                 /**
                  * The physics type of the Group's members.
@@ -54253,7 +54223,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.impact.world.on('collide', listener)`.
                  */
-                var COLLIDE: any;
+                const COLLIDE: any;
 
                 /**
                  * The Impact Physics World Pause Event.
@@ -54262,7 +54232,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.impact.world.on('pause', listener)`.
                  */
-                var PAUSE: any;
+                const PAUSE: any;
 
                 /**
                  * The Impact Physics World Resume Event.
@@ -54271,7 +54241,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.impact.world.on('resume', listener)`.
                  */
-                var RESUME: any;
+                const RESUME: any;
 
             }
 
@@ -57772,7 +57742,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('afterupdate', listener)`.
                  */
-                var AFTER_UPDATE: any;
+                const AFTER_UPDATE: any;
 
                 type BeforeUpdateEvent = {
                     /**
@@ -57796,7 +57766,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('beforeupdate', listener)`.
                  */
-                var BEFORE_UPDATE: any;
+                const BEFORE_UPDATE: any;
 
                 type CollisionActiveEvent = {
                     /**
@@ -57825,7 +57795,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('collisionactive', listener)`.
                  */
-                var COLLISION_ACTIVE: any;
+                const COLLISION_ACTIVE: any;
 
                 type CollisionEndEvent = {
                     /**
@@ -57854,7 +57824,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('collisionend', listener)`.
                  */
-                var COLLISION_END: any;
+                const COLLISION_END: any;
 
                 type CollisionStartEvent = {
                     /**
@@ -57883,7 +57853,37 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('collisionstart', listener)`.
                  */
-                var COLLISION_START: any;
+                const COLLISION_START: any;
+
+                /**
+                 * The Matter Physics Drag End Event.
+                 * 
+                 * This event is dispatched by a Matter Physics World instance when a Pointer Constraint
+                 * stops dragging a body.
+                 * 
+                 * Listen to it from a Scene using: `this.matter.world.on('dragend', listener)`.
+                 */
+                const DRAG_END: any;
+
+                /**
+                 * The Matter Physics Drag Event.
+                 * 
+                 * This event is dispatched by a Matter Physics World instance when a Pointer Constraint
+                 * is actively dragging a body. It is emitted each time the pointer moves.
+                 * 
+                 * Listen to it from a Scene using: `this.matter.world.on('drag', listener)`.
+                 */
+                const DRAG: any;
+
+                /**
+                 * The Matter Physics Drag Start Event.
+                 * 
+                 * This event is dispatched by a Matter Physics World instance when a Pointer Constraint
+                 * starts dragging a body.
+                 * 
+                 * Listen to it from a Scene using: `this.matter.world.on('dragstart', listener)`.
+                 */
+                const DRAG_START: any;
 
                 /**
                  * The Matter Physics World Pause Event.
@@ -57892,7 +57892,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('pause', listener)`.
                  */
-                var PAUSE: any;
+                const PAUSE: any;
 
                 /**
                  * The Matter Physics World Resume Event.
@@ -57901,7 +57901,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('resume', listener)`.
                  */
-                var RESUME: any;
+                const RESUME: any;
 
                 type SleepEndEvent = {
                     /**
@@ -57921,7 +57921,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('sleepend', listener)`.
                  */
-                var SLEEP_END: any;
+                const SLEEP_END: any;
 
                 type SleepStartEvent = {
                     /**
@@ -57941,7 +57941,7 @@ declare namespace Phaser {
                  * 
                  * Listen to it from a Scene using: `this.matter.world.on('sleepstart', listener)`.
                  */
-                var SLEEP_START: any;
+                const SLEEP_START: any;
 
             }
 
@@ -60688,77 +60688,117 @@ declare namespace Phaser {
             }
 
             /**
-             * [description]
+             * A Pointer Constraint is a special type of constraint that allows you to click
+             * and drag bodies in a Matter World. It monitors the active Pointers in a Scene,
+             * and when one is pressed down it checks to see if that hit any part of any active
+             * body in the world. If it did, and the body has input enabled, it will begin to
+             * drag it until either released, or you stop it via the `stopDrag` method.
+             * 
+             * You can adjust the stiffness, length and other properties of the constraint via
+             * the `options` object on creation.
              */
             class PointerConstraint {
                 /**
                  * 
-                 * @param scene [description]
-                 * @param world [description]
-                 * @param options [description]
+                 * @param scene A reference to the Scene to which this Pointer Constraint belongs.
+                 * @param world A reference to the Matter World instance to which this Constraint belongs.
+                 * @param options A Constraint configuration object.
                  */
-                constructor(scene: Phaser.Scene, world: Phaser.Physics.Matter.World, options: object);
+                constructor(scene: Phaser.Scene, world: Phaser.Physics.Matter.World, options?: object);
 
                 /**
-                 * [description]
+                 * A reference to the Scene to which this Pointer Constraint belongs.
+                 * This is the same Scene as the Matter World instance.
                  */
                 scene: Phaser.Scene;
 
                 /**
-                 * [description]
+                 * A reference to the Matter World instance to which this Constraint belongs.
                  */
                 world: Phaser.Physics.Matter.World;
 
                 /**
-                 * [description]
+                 * The Camera the Pointer was interacting with when the input
+                 * down event was processed.
                  */
                 camera: Phaser.Cameras.Scene2D.Camera;
 
                 /**
-                 * [description]
+                 * A reference to the Input Pointer that activated this Constraint.
+                 * This is set in the `onDown` handler.
                  */
                 pointer: Phaser.Input.Pointer;
 
                 /**
-                 * [description]
+                 * Is this Constraint active or not?
+                 * 
+                 * An active constraint will be processed each update. An inactive one will be skipped.
+                 * Use this to toggle a Pointer Constraint on and off.
                  */
                 active: boolean;
 
                 /**
-                 * The transformed position.
+                 * The internal transformed position.
                  */
                 position: Phaser.Math.Vector2;
 
                 /**
-                 * [description]
+                 * The body that is currently being dragged, if any.
+                 */
+                body: MatterJS.Body;
+
+                /**
+                 * The part of the body that was clicked on to start the drag.
+                 */
+                part: MatterJS.Body;
+
+                /**
+                 * The native Matter Constraint that is used to attach to bodies.
                  */
                 constraint: object;
 
                 /**
-                 * [description]
-                 * @param pointer [description]
+                 * A Pointer has been pressed down onto the Scene.
+                 * 
+                 * If this Constraint doesn't have an active Pointer then a hit test is
+                 * run against all active bodies in the world. If one is found it is bound
+                 * to this constraint and the drag begins.
+                 * @param pointer A reference to the Pointer that was pressed.
                  */
                 onDown(pointer: Phaser.Input.Pointer): void;
 
                 /**
-                 * [description]
+                 * Scans all active bodies in the current Matter World to see if any of them
+                 * are hit by the Pointer. The _first one_ found to hit is set as the active contraint
+                 * body.
                  */
-                onUp(): void;
+                getBody(): boolean;
 
                 /**
-                 * [description]
-                 * @param body [description]
-                 * @param position [description]
+                 * Scans the current body to determine if a part of it was clicked on.
+                 * If a part is found the body is set as the `constraint.bodyB` property,
+                 * as well as the `body` property of this class. The part is also set.
+                 * @param body The Matter Body to check.
+                 * @param position A translated hit test position.
                  */
-                getBodyPart(body: MatterJS.Body, position: Phaser.Math.Vector2): boolean;
+                hitTestBody(body: MatterJS.Body, position: Phaser.Math.Vector2): boolean;
 
                 /**
-                 * [description]
+                 * Internal update handler. Called in the Matter BEFORE_UPDATE step.
                  */
                 update(): void;
 
                 /**
-                 * [description]
+                 * Stops the Pointer Constraint from dragging the body any further.
+                 * 
+                 * This is called automatically if the Pointer is released while actively
+                 * dragging a body. Or, you can call it manually to release a body from a
+                 * constraint without having to first release the pointer.
+                 */
+                stopDrag(): void;
+
+                /**
+                 * Destroys this Pointer Constraint instance and all of its references.
                  */
                 destroy(): void;
 
@@ -61166,6 +61206,86 @@ declare namespace Phaser {
          * They are always created in the order in which they appear in the array.
          */
         var DefaultScene: any[];
+
+        namespace PluginCache {
+            /**
+             * Static method called directly by the Core internal Plugins.
+             * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+             * Plugin is the object to instantiate to create the plugin
+             * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+             * @param key A reference used to get this plugin from the plugin cache.
+             * @param plugin The plugin to be stored. Should be the core object, not instantiated.
+             * @param mapping If this plugin is to be injected into the Scene Systems, this is the property key map used.
+             * @param custom Core Scene plugin or a Custom Scene plugin? Default false.
+             */
+            function register(key: string, plugin: Function, mapping: string, custom?: boolean): void;
+
+            /**
+             * Stores a custom plugin in the global plugin cache.
+             * The key must be unique, within the scope of the cache.
+             * @param key A reference used to get this plugin from the plugin cache.
+             * @param plugin The plugin to be stored. Should be the core object, not instantiated.
+             * @param mapping If this plugin is to be injected into the Scene Systems, this is the property key map used.
+             * @param data A value to be passed to the plugin's `init` method.
+             */
+            function registerCustom(key: string, plugin: Function, mapping: string, data: any): void;
+
+            /**
+             * Checks if the given key is already being used in the core plugin cache.
+             * @param key The key to check for.
+             */
+            function hasCore(key: string): boolean;
+
+            /**
+             * Checks if the given key is already being used in the custom plugin cache.
+             * @param key The key to check for.
+             */
+            function hasCustom(key: string): boolean;
+
+            /**
+             * Returns the core plugin object from the cache based on the given key.
+             * @param key The key of the core plugin to get.
+             */
+            function getCore(key: string): CorePluginContainer;
+
+            /**
+             * Returns the custom plugin object from the cache based on the given key.
+             * @param key The key of the custom plugin to get.
+             */
+            function getCustom(key: string): CustomPluginContainer;
+
+            /**
+             * Returns an object from the custom cache based on the given key that can be instantiated.
+             * @param key The key of the custom plugin to get.
+             */
+            function getCustomClass(key: string): Function;
+
+            /**
+             * Removes a core plugin based on the given key.
+             * @param key The key of the core plugin to remove.
+             */
+            function remove(key: string): void;
+
+            /**
+             * Removes a custom plugin based on the given key.
+             * @param key The key of the custom plugin to remove.
+             */
+            function removeCustom(key: string): void;
+
+            /**
+             * Removes all Core Plugins.
+             * 
+             * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
+             * So be sure you only call this if you do not wish to run Phaser again.
+             */
+            function destroyCorePlugins(): void;
+
+            /**
+             * Removes all Custom Plugins.
+             */
+            function destroyCustomPlugins(): void;
+
+        }
 
         /**
          * The PluginManager is responsible for installing and adding plugins to Phaser.
@@ -61691,7 +61811,7 @@ declare namespace Phaser {
                 /**
                  * The local configuration settings of the CanvasRenderer.
                  */
-                config: RendererConfig;
+                config: object;
 
                 /**
                  * The scale mode which should be used by the CanvasRenderer.
@@ -62783,7 +62903,7 @@ declare namespace Phaser {
                 /**
                  * The local configuration settings of this WebGL Renderer.
                  */
-                config: RendererConfig;
+                config: object;
 
                 /**
                  * The Game instance which owns this WebGL Renderer.
@@ -63524,7 +63644,7 @@ declare namespace Phaser {
              * The game canvas is not centered within the parent by Phaser.
              * You can still center it yourself via CSS.
              */
-            const NO_CENTER: integer;
+            var NO_CENTER: any;
 
             /**
              * The game canvas is centered both horizontally and vertically within the parent.
@@ -63533,7 +63653,7 @@ declare namespace Phaser {
              * Centering is achieved by setting the margin left and top properties of the
              * game canvas, and does not factor in any other CSS styles you may have applied.
              */
-            const CENTER_BOTH: integer;
+            var CENTER_BOTH: any;
 
             /**
              * The game canvas is centered horizontally within the parent.
@@ -63542,7 +63662,7 @@ declare namespace Phaser {
              * Centering is achieved by setting the margin left and top properties of the
              * game canvas, and does not factor in any other CSS styles you may have applied.
              */
-            const CENTER_HORIZONTALLY: integer;
+            var CENTER_HORIZONTALLY: any;
 
             /**
              * The game canvas is centered both vertically within the parent.
@@ -63551,9 +63671,16 @@ declare namespace Phaser {
              * Centering is achieved by setting the margin left and top properties of the
              * game canvas, and does not factor in any other CSS styles you may have applied.
              */
-            const CENTER_VERTICALLY: integer;
+            var CENTER_VERTICALLY: any;
 
         }
+
+        /**
+         * Phaser Scale Manager constants for centering the game canvas.
+         * 
+         * To find out what each mode does please see [Phaser.Scale.Center]{@link Phaser.Scale.Center}.
+         */
+        type CenterType = ()=>void;
 
         /**
          * Phaser Scale Manager constants for orientation.
@@ -63562,14 +63689,21 @@ declare namespace Phaser {
             /**
              * A landscape orientation.
              */
-            const LANDSCAPE: string;
+            var LANDSCAPE: any;
 
             /**
              * A portrait orientation.
              */
-            const PORTRAIT: string;
+            var PORTRAIT: any;
 
         }
+
+        /**
+         * Phaser Scale Manager constants for orientation.
+         * 
+         * To find out what each mode does please see [Phaser.Scale.Orientation]{@link Phaser.Scale.Orientation}.
+         */
+        type OrientationType = ()=>void;
 
         /**
          * Phaser Scale Manager constants for the different scale modes available.
@@ -63580,37 +63714,44 @@ declare namespace Phaser {
              * again from that point on. If you change the canvas size, either via CSS, or directly via code, then you need
              * to call the Scale Managers `resize` method to give the new dimensions, or input events will stop working.
              */
-            const NONE: integer;
+            var NONE: any;
 
             /**
              * The height is automatically adjusted based on the width.
              */
-            const WIDTH_CONTROLS_HEIGHT: integer;
+            var WIDTH_CONTROLS_HEIGHT: any;
 
             /**
              * The width is automatically adjusted based on the height.
              */
-            const HEIGHT_CONTROLS_WIDTH: integer;
+            var HEIGHT_CONTROLS_WIDTH: any;
 
             /**
              * The width and height are automatically adjusted to fit inside the given target area,
              * while keeping the aspect ratio. Depending on the aspect ratio there may be some space
              * inside the area which is not covered.
              */
-            const FIT: integer;
+            var FIT: any;
 
             /**
              * The width and height are automatically adjusted to make the size cover the entire target
              * area while keeping the aspect ratio. This may extend further out than the target size.
              */
-            const ENVELOP: integer;
+            var ENVELOP: any;
 
             /**
              * The Canvas is resized to fit all available _parent_ space, regardless of aspect ratio.
              */
-            const RESIZE: integer;
+            var RESIZE: any;
 
         }
+
+        /**
+         * Phaser Scale Manager constants for the different scale modes available.
+         * 
+         * To find out what each mode does please see [Phaser.Scale.ScaleModes]{@link Phaser.Scale.ScaleModes}.
+         */
+        type ScaleModeType = ()=>void;
 
         /**
          * Phaser Scale Manager constants for zoom modes.
@@ -63619,51 +63760,63 @@ declare namespace Phaser {
             /**
              * The game canvas will not be zoomed by Phaser.
              */
-            const NO_ZOOM: integer;
+            var NO_ZOOM: any;
 
             /**
              * The game canvas will be 2x zoomed by Phaser.
              */
-            const ZOOM_2X: integer;
+            var ZOOM_2X: any;
 
             /**
              * The game canvas will be 4x zoomed by Phaser.
              */
-            const ZOOM_4X: integer;
+            var ZOOM_4X: any;
 
             /**
              * Calculate the zoom value based on the maximum multiplied game size that will
              * fit into the parent, or browser window if no parent is set.
              */
-            const MAX_ZOOM: integer;
+            var MAX_ZOOM: any;
 
         }
+
+        /**
+         * Phaser Scale Manager constants for zoom modes.
+         * 
+         * To find out what each mode does please see [Phaser.Scale.Zoom]{@link Phaser.Scale.Zoom}.
+         */
+        type ZoomType = ()=>void;
 
         namespace Events {
             /**
              * The Scale Manager Resize Event.
              */
-            var ENTER_FULLSCREEN: any;
+            const ENTER_FULLSCREEN: any;
 
             /**
              * The Scale Manager Resize Event.
              */
-            var FULLSCREEN_UNSUPPORTED: any;
+            const FULLSCREEN_UNSUPPORTED: any;
 
             /**
              * The Scale Manager Resize Event.
              */
-            var LEAVE_FULLSCREEN: any;
+            const LEAVE_FULLSCREEN: any;
 
             /**
              * The Scale Manager Resize Event.
              */
-            var ORIENTATION_CHANGE: any;
+            const ORIENTATION_CHANGE: any;
 
             /**
              * The Scale Manager Resize Event.
+             * 
+             * This event is dispatched whenever the Scale Manager detects a resize event from the browser.
+             * It sends three parameters to the callback, each of them being Size components. You can read
+             * the `width`, `height`, `aspectRatio` and other properties of these components to help with
+             * scaling your own game content.
              */
-            var RESIZE: any;
+            const RESIZE: any;
 
         }
 
@@ -63671,20 +63824,23 @@ declare namespace Phaser {
          * The Scale Manager handles the scaling, resizing and alignment of the game canvas.
          * 
          * The way scaling is handled is by setting the game canvas to a fixed size, which is defined in the
-         * game configuration. This dimension can be obtained in the `gameSize` property. The Scale Manager
-         * will then look at the available space within the _parent_ and scale the canvas accordingly. This
-         * is handled by setting the canvas CSS width and height properties, leaving the pixel dimensions
-         * untouched. Scaling is therefore achieved by keeping the core canvas the same size and 'stretching'
-         * it via its CSS properties. The actual displayed size of the game can be found in the `displaySize` component.
+         * game configuration. You also define the parent container in the game config. If no parent is given,
+         * it will default to using the document body. The Scale Manager will then look at the available space
+         * within the _parent_ and scale the canvas accordingly. Scaling is handled by setting the canvas CSS
+         * width and height properties, leaving the width and height of the canvas element itself untouched.
+         * Scaling is therefore achieved by keeping the core canvas the same size and 'stretching'
+         * it via its CSS properties. This gives the same result and speed as using the `transform-scale` CSS
+         * property, without the need for browser prefix handling.
          * 
-         * The calculations of the scale is heavily influenced by the bounding Parent size, which is the computed
-         * dimensions of the canvas's parent container / element. The CSS rules of the parent element play an
-         * important role in the operation of the Scale Manager.
+         * The calculations for the scale are heavily influenced by the bounding parent size, which is the computed
+         * dimensions of the canvas's parent. The CSS rules of the parent element play an important role in the
+         * operation of the Scale Manager. For example, if the parent has no defined width or height, then actions
+         * like auto-centering will fail to achieve the required result. The Scale Manager works in tandem with the
+         * CSS you set-up on the page hosting your game, rather than taking control of it.
          * 
          * #### Parent and Display canvas containment guidelines:
          * 
-         * - Style the Parent element (of the game canvas) to control the Parent size and
-         *   thus the games size and layout.
+         * - Style the Parent element (of the game canvas) to control the Parent size and thus the games size and layout.
          * 
          * - The Parent element's CSS styles should _effectively_ apply maximum (and minimum) bounding behavior.
          * 
@@ -63704,15 +63860,59 @@ declare namespace Phaser {
          * 
          * If you wish to scale your game so that it always fits into the available space within the parent, you
          * should use the scale mode `FIT`. Look at the documentation for other scale modes to see what options are
-         * available.
+         * available. Here is a basic config showing how to set this scale mode:
+         * 
+         * ```javascript
+         * scale: {
+         *     parent: 'yourgamediv',
+         *     mode: Phaser.Scale.FIT,
+         *     width: 800,
+         *     height: 600
+         * }
+         * ```
+         * 
+         * Place the `scale` config object within your game config.
          * 
          * If you wish for the canvas to be resized directly, so that the canvas itself fills the available space
          * (i.e. it isn't scaled, it's resized) then use the `RESIZE` scale mode. This will give you a 1:1 mapping
-         * of canvas pixels to game size.
+         * of canvas pixels to game size. In this mode CSS isn't used to scale the canvas, it's literally adjusted
+         * to fill all available space within the parent. You should be extremely careful about the size of the
+         * canvas you're creating when doing this, as the larger the area, the more work the GPU has to do and it's
+         * very easy to hit fill-rate limits quickly.
+         * 
+         * For complex, custom-scaling requirements, you should probably consider using the `RESIZE` scale mode,
+         * with your own limitations in place re: canvas dimensions and managing the scaling with the game scenes
+         * yourself. For the vast majority of games, however, the `FIT` mode is likely to be the most used.
+         * 
+         * Please appreciate that the Scale Manager cannot perform miracles. All it does is scale your game canvas
+         * as best it can, based on what it can infer from its surrounding area. There are all kinds of environments
+         * where it's up to you to guide and help the canvas position itself, especially when built into rendering
+         * frameworks like React and Vue. If your page requires meta tags to prevent user scaling gestures, or such
+         * like, then it's up to you to ensure they are present in the html.
+         * 
+         * #### Centering
          * 
          * You can also have the game canvas automatically centered. Again, this relies heavily on the parent being
          * properly configured and styled, as the centering offsets are based entirely on the available space
-         * within the parent element. Please see the centering options for details.
+         * within the parent element. Centering is disabled by default, or can be applied horizontally, vertically,
+         * or both. Here's an example:
+         * 
+         * ```javascript
+         * scale: {
+         *     parent: 'yourgamediv',
+         *     autoCenter: Phaser.Scale.CENTER_BOTH,
+         *     width: 800,
+         *     height: 600
+         * }
+         * ```
+         * 
+         * #### Fullscreen API
+         * 
+         * If the browser supports it, you can send your game into fullscreen mode. In this mode, the game will fill
+         * the entire display, removing all browser UI and anything else present on the screen. It will remain in this
+         * mode until your game either disables it, or until the user tabs out or presses ESCape if on desktop. It's a
+         * great way to achieve a desktop-game like experience from the browser, but it does require a modern browser
+         * to handle it. Some mobile browsers also support this.
          */
         class ScaleManager extends Phaser.Events.EventEmitter {
             /**
@@ -63780,7 +63980,7 @@ declare namespace Phaser {
             /**
              * The game scale mode.
              */
-            scaleMode: Phaser.Scale.ScaleModes;
+            scaleMode: Phaser.Scale.ScaleModeType;
 
             /**
              * The canvas resolution.
@@ -63824,14 +64024,14 @@ declare namespace Phaser {
              * Please be aware that in order to center the game canvas, you must have specified a parent
              * that has a size set, or the canvas parent is the document.body.
              */
-            autoCenter: Phaser.Scale.Center;
+            autoCenter: Phaser.Scale.CenterType;
 
             /**
              * The current device orientation.
              * 
              * Orientation events are dispatched via the Device Orientation API, typically only on mobile browsers.
              */
-            orientation: Phaser.Scale.Orientation;
+            orientation: Phaser.Scale.OrientationType;
 
             /**
              * A reference to the Device.Fullscreen object.
@@ -64030,7 +64230,7 @@ declare namespace Phaser {
              * When it leaves fullscreen, the div will be removed.
              * @param fullscreenOptions The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
              */
-            startFullscreen(fullscreenOptions?: FullscreenOptions): void;
+            startFullscreen(fullscreenOptions?: object): void;
 
             /**
              * An internal method that gets the target element that is used when entering fullscreen mode.
@@ -64053,7 +64253,7 @@ declare namespace Phaser {
              * from fullscreen unless the iframe has the `allowfullscreen` attribute.
              * @param fullscreenOptions The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
              */
-            toggleFullscreen(fullscreenOptions?: FullscreenOptions): void;
+            toggleFullscreen(fullscreenOptions?: object): void;
 
             /**
              * An internal method that starts the different DOM event listeners running.
@@ -64140,7 +64340,7 @@ declare namespace Phaser {
          * The game canvas is not centered within the parent by Phaser.
          * You can still center it yourself via CSS.
          */
-        const Phaser.Scale.NO_CENTER: integer;
+        var NO_CENTER: any;
 
         /**
          * The game canvas is centered both horizontally and vertically within the parent.
@@ -64149,7 +64349,7 @@ declare namespace Phaser {
          * Centering is achieved by setting the margin left and top properties of the
          * game canvas, and does not factor in any other CSS styles you may have applied.
          */
-        const Phaser.Scale.CENTER_BOTH: integer;
+        var CENTER_BOTH: any;
 
         /**
          * The game canvas is centered horizontally within the parent.
@@ -64158,7 +64358,7 @@ declare namespace Phaser {
          * Centering is achieved by setting the margin left and top properties of the
          * game canvas, and does not factor in any other CSS styles you may have applied.
          */
-        const Phaser.Scale.CENTER_HORIZONTALLY: integer;
+        var CENTER_HORIZONTALLY: any;
 
         /**
          * The game canvas is centered both vertically within the parent.
@@ -64167,73 +64367,73 @@ declare namespace Phaser {
          * Centering is achieved by setting the margin left and top properties of the
          * game canvas, and does not factor in any other CSS styles you may have applied.
          */
-        const Phaser.Scale.CENTER_VERTICALLY: integer;
+        var CENTER_VERTICALLY: any;
 
         /**
          * A landscape orientation.
          */
-        const Phaser.Scale.LANDSCAPE: string;
+        var LANDSCAPE: any;
 
         /**
          * A portrait orientation.
          */
-        const Phaser.Scale.PORTRAIT: string;
+        var PORTRAIT: any;
 
         /**
          * No scaling happens at all. The canvas is set to the size given in the game config and Phaser doesn't change it
          * again from that point on. If you change the canvas size, either via CSS, or directly via code, then you need
          * to call the Scale Managers `resize` method to give the new dimensions, or input events will stop working.
          */
-        const Phaser.Scale.NONE: integer;
+        var NONE: any;
 
         /**
          * The height is automatically adjusted based on the width.
          */
-        const Phaser.Scale.WIDTH_CONTROLS_HEIGHT: integer;
+        var WIDTH_CONTROLS_HEIGHT: any;
 
         /**
          * The width is automatically adjusted based on the height.
          */
-        const Phaser.Scale.HEIGHT_CONTROLS_WIDTH: integer;
+        var HEIGHT_CONTROLS_WIDTH: any;
 
         /**
          * The width and height are automatically adjusted to fit inside the given target area,
          * while keeping the aspect ratio. Depending on the aspect ratio there may be some space
          * inside the area which is not covered.
          */
-        const Phaser.Scale.FIT: integer;
+        var FIT: any;
 
         /**
          * The width and height are automatically adjusted to make the size cover the entire target
          * area while keeping the aspect ratio. This may extend further out than the target size.
          */
-        const Phaser.Scale.ENVELOP: integer;
+        var ENVELOP: any;
 
         /**
          * The Canvas is resized to fit all available _parent_ space, regardless of aspect ratio.
          */
-        const Phaser.Scale.RESIZE: integer;
+        var RESIZE: any;
 
         /**
          * The game canvas will not be zoomed by Phaser.
          */
-        const Phaser.Scale.NO_ZOOM: integer;
+        var NO_ZOOM: any;
 
         /**
          * The game canvas will be 2x zoomed by Phaser.
          */
-        const Phaser.Scale.ZOOM_2X: integer;
+        var ZOOM_2X: any;
 
         /**
          * The game canvas will be 4x zoomed by Phaser.
          */
-        const Phaser.Scale.ZOOM_4X: integer;
+        var ZOOM_4X: any;
 
         /**
          * Calculate the zoom value based on the maximum multiplied game size that will
          * fit into the parent, or browser window if no parent is set.
          */
-        const Phaser.Scale.MAX_ZOOM: integer;
+        var MAX_ZOOM: any;
 
     }
 
@@ -64296,7 +64496,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('boot', listener)`.
              */
-            var BOOT: any;
+            const BOOT: any;
 
             /**
              * The Scene Systems Destroy Event.
@@ -64307,7 +64507,7 @@ declare namespace Phaser {
              * 
              * You should destroy any resources that may be in use by your Scene in this event handler.
              */
-            var DESTROY: any;
+            const DESTROY: any;
 
             /**
              * The Scene Systems Pause Event.
@@ -64317,7 +64517,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('pause', listener)`.
              */
-            var PAUSE: any;
+            const PAUSE: any;
 
             /**
              * The Scene Systems Post Update Event.
@@ -64336,7 +64536,7 @@ declare namespace Phaser {
              * 
              * A Scene will only run its step if it is active.
              */
-            var POST_UPDATE: any;
+            const POST_UPDATE: any;
 
             /**
              * The Scene Systems Pre Update Event.
@@ -64355,7 +64555,7 @@ declare namespace Phaser {
              * 
              * A Scene will only run its step if it is active.
              */
-            var PRE_UPDATE: any;
+            const PRE_UPDATE: any;
 
             /**
              * The Scene Systems Ready Event.
@@ -64366,7 +64566,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('ready', listener)`.
              */
-            var READY: any;
+            const READY: any;
 
             /**
              * The Scene Systems Render Event.
@@ -64386,7 +64586,7 @@ declare namespace Phaser {
              * A Scene will only render if it is visible and active.
              * By the time this event is dispatched, the Scene will have already been rendered.
              */
-            var RENDER: any;
+            const RENDER: any;
 
             /**
              * The Scene Systems Resume Event.
@@ -64396,7 +64596,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('resume', listener)`.
              */
-            var RESUME: any;
+            const RESUME: any;
 
             /**
              * The Scene Systems Shutdown Event.
@@ -64409,7 +64609,7 @@ declare namespace Phaser {
              * that the Scene may, at any time, become active again. A shutdown Scene is not 'destroyed', it's simply not
              * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
              */
-            var SHUTDOWN: any;
+            const SHUTDOWN: any;
 
             /**
              * The Scene Systems Sleep Event.
@@ -64419,7 +64619,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('sleep', listener)`.
              */
-            var SLEEP: any;
+            const SLEEP: any;
 
             /**
              * The Scene Systems Start Event.
@@ -64428,7 +64628,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('start', listener)`.
              */
-            var START: any;
+            const START: any;
 
             /**
              * The Scene Transition Complete Event.
@@ -64448,7 +64648,7 @@ declare namespace Phaser {
              * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
              * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
              */
-            var TRANSITION_COMPLETE: any;
+            const TRANSITION_COMPLETE: any;
 
             /**
              * The Scene Transition Init Event.
@@ -64468,7 +64668,7 @@ declare namespace Phaser {
              * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
              * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
              */
-            var TRANSITION_INIT: any;
+            const TRANSITION_INIT: any;
 
             /**
              * The Scene Transition Out Event.
@@ -64485,7 +64685,7 @@ declare namespace Phaser {
              * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
              * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
              */
-            var TRANSITION_OUT: any;
+            const TRANSITION_OUT: any;
 
             /**
              * The Scene Transition Start Event.
@@ -64508,7 +64708,7 @@ declare namespace Phaser {
              * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
              * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
              */
-            var TRANSITION_START: any;
+            const TRANSITION_START: any;
 
             /**
              * The Scene Transition Wake Event.
@@ -64526,7 +64726,7 @@ declare namespace Phaser {
              * 4. [TRANSITION_WAKE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
              * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
              */
-            var TRANSITION_WAKE: any;
+            const TRANSITION_WAKE: any;
 
             /**
              * The Scene Systems Update Event.
@@ -64545,7 +64745,7 @@ declare namespace Phaser {
              * 
              * A Scene will only run its step if it is active.
              */
-            var UPDATE: any;
+            const UPDATE: any;
 
             /**
              * The Scene Systems Wake Event.
@@ -64555,7 +64755,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using `this.scene.events.on('wake', listener)`.
              */
-            var WAKE: any;
+            const WAKE: any;
 
         }
 
@@ -64923,7 +65123,7 @@ declare namespace Phaser {
              * override this understand that until the target Scene completes it might never be unlocked for input events.
              * @param config The transition configuration object.
              */
-            transition(config: Phaser.Scenes.ScenePlugin.SceneTransitionConfig): boolean;
+            transition(config: SceneTransitionConfig): boolean;
 
             /**
              * Add the Scene into the Scene Manager and start it if 'autoStart' is true or the Scene config 'active' property is set.
@@ -65312,7 +65512,7 @@ declare namespace Phaser {
              * 
              * In the default set-up you can access this from within a Scene via the `this.scale` property.
              */
-            scale: Phaser.DOM.ScaleManager;
+            scale: Phaser.Scale.ScaleManager;
 
             /**
              * A reference to the global Sound Manager.
@@ -65680,6 +65880,12 @@ declare namespace Phaser {
         facebook: Phaser.FacebookInstantGamesPlugin;
 
         /**
+         * A reference to the global Scale Manager.
+         * This property will only be available if defined in the Scene Injection Map.
+         */
+        scale: Phaser.Scale.ScaleManager;
+
+        /**
          * Should be overridden by your own Scenes.
          * @param time The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
          * @param delta The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
@@ -65879,7 +66085,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
-            addAudioSprite(key: string, config?: SoundConfig): Phaser.Sound.BaseSound.AudioSpriteSound;
+            addAudioSprite(key: string, config?: SoundConfig): AudioSpriteSound;
 
             /**
              * Enables playing sound on the fly without the need to keep a reference to it.
@@ -66005,7 +66211,7 @@ declare namespace Phaser {
              * music.play();
              * ```
              */
-            var COMPLETE: any;
+            const COMPLETE: any;
 
             /**
              * The Sound Destroy Event.
@@ -66021,7 +66227,7 @@ declare namespace Phaser {
              * music.destroy();
              * ```
              */
-            var DESTROY: any;
+            const DESTROY: any;
 
             /**
              * The Sound Detune Event.
@@ -66037,7 +66243,7 @@ declare namespace Phaser {
              * music.setDetune(200);
              * ```
              */
-            var DETUNE: any;
+            const DETUNE: any;
 
             /**
              * The Sound Manager Global Detune Event.
@@ -66048,7 +66254,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('rate', listener)`.
              */
-            var GLOBAL_DETUNE: any;
+            const GLOBAL_DETUNE: any;
 
             /**
              * The Sound Manager Global Mute Event.
@@ -66058,7 +66264,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('mute', listener)`.
              */
-            var GLOBAL_MUTE: any;
+            const GLOBAL_MUTE: any;
 
             /**
              * The Sound Manager Global Rate Event.
@@ -66069,7 +66275,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('rate', listener)`.
              */
-            var GLOBAL_RATE: any;
+            const GLOBAL_RATE: any;
 
             /**
              * The Sound Manager Global Volume Event.
@@ -66079,7 +66285,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('volume', listener)`.
              */
-            var GLOBAL_VOLUME: any;
+            const GLOBAL_VOLUME: any;
 
             /**
              * The Sound Looped Event.
@@ -66097,7 +66303,7 @@ declare namespace Phaser {
              * 
              * This is not to be confused with the [LOOP]{@linkcode Phaser.Sound.Events#event:LOOP} event, which only emits when the loop state of a Sound is changed.
              */
-            var LOOPED: any;
+            const LOOPED: any;
 
             /**
              * The Sound Loop Event.
@@ -66114,7 +66320,7 @@ declare namespace Phaser {
              * 
              * This is not to be confused with the [LOOPED]{@linkcode Phaser.Sound.Events#event:LOOPED} event, which emits each time a Sound loops during playback.
              */
-            var LOOP: any;
+            const LOOP: any;
 
             /**
              * The Sound Mute Event.
@@ -66130,7 +66336,7 @@ declare namespace Phaser {
              * music.setMute(true);
              * ```
              */
-            var MUTE: any;
+            const MUTE: any;
 
             /**
              * The Pause All Sounds Event.
@@ -66141,7 +66347,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('pauseall', listener)`.
              */
-            var PAUSE_ALL: any;
+            const PAUSE_ALL: any;
 
             /**
              * The Sound Pause Event.
@@ -66157,7 +66363,7 @@ declare namespace Phaser {
              * music.pause();
              * ```
              */
-            var PAUSE: any;
+            const PAUSE: any;
 
             /**
              * The Sound Play Event.
@@ -66172,7 +66378,7 @@ declare namespace Phaser {
              * music.play();
              * ```
              */
-            var PLAY: any;
+            const PLAY: any;
 
             /**
              * The Sound Rate Change Event.
@@ -66188,7 +66394,7 @@ declare namespace Phaser {
              * music.setRate(0.5);
              * ```
              */
-            var RATE: any;
+            const RATE: any;
 
             /**
              * The Resume All Sounds Event.
@@ -66199,7 +66405,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('resumeall', listener)`.
              */
-            var RESUME_ALL: any;
+            const RESUME_ALL: any;
 
             /**
              * The Sound Resume Event.
@@ -66216,7 +66422,7 @@ declare namespace Phaser {
              * music.resume();
              * ```
              */
-            var RESUME: any;
+            const RESUME: any;
 
             /**
              * The Sound Seek Event.
@@ -66232,7 +66438,7 @@ declare namespace Phaser {
              * music.setSeek(5000);
              * ```
              */
-            var SEEK: any;
+            const SEEK: any;
 
             /**
              * The Stop All Sounds Event.
@@ -66243,7 +66449,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('stopall', listener)`.
              */
-            var STOP_ALL: any;
+            const STOP_ALL: any;
 
             /**
              * The Sound Stop Event.
@@ -66259,7 +66465,7 @@ declare namespace Phaser {
              * music.stop();
              * ```
              */
-            var STOP: any;
+            const STOP: any;
 
             /**
              * The Sound Manager Unlocked Event.
@@ -66270,7 +66476,7 @@ declare namespace Phaser {
              * 
              * Listen to it from a Scene using: `this.sound.on('unlocked', listener)`.
              */
-            var UNLOCKED: any;
+            const UNLOCKED: any;
 
             /**
              * The Sound Volume Event.
@@ -66286,7 +66492,7 @@ declare namespace Phaser {
              * music.setVolume(0.5);
              * ```
              */
-            var VOLUME: any;
+            const VOLUME: any;
 
         }
 
@@ -67753,16 +67959,20 @@ declare namespace Phaser {
              * @param imageData The ImageData to put at the given location.
              * @param x The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
              * @param y The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+             * @param dirtyX Horizontal position (x coordinate) of the top-left corner from which the image data will be extracted. Default 0.
+             * @param dirtyY Vertical position (x coordinate) of the top-left corner from which the image data will be extracted. Default 0.
+             * @param dirtyWidth Width of the rectangle to be painted. Defaults to the width of the image data.
+             * @param dirtyHeight Height of the rectangle to be painted. Defaults to the height of the image data.
              */
-            putData(imageData: ImageData, x: integer, y: integer): this;
+            putData(imageData: ImageData, x: integer, y: integer, dirtyX?: integer, dirtyY?: integer, dirtyWidth?: integer, dirtyHeight?: integer): this;
 
             /**
              * Gets an ImageData region from this CanvasTexture from the position and size specified.
              * You can write this back using `CanvasTexture.putData`, or manipulate it.
              * @param x The x coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
              * @param y The y coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
-             * @param width The width of the region to get. Must be an integer.
-             * @param height The height of the region to get. Must be an integer.
+             * @param width The width of the rectangle from which the ImageData will be extracted. Positive values are to the right, and negative to the left.
+             * @param height The height of the rectangle from which the ImageData will be extracted. Positive values are down, and negative are up.
              */
             getData(x: integer, y: integer, width: integer, height: integer): ImageData;
 
@@ -67790,7 +68000,7 @@ declare namespace Phaser {
              * @param width The width of the region to get. Must be an integer.
              * @param height The height of the region to get. Must be an integer. If not given will be set to the `width`.
              */
-            getPixels(x: integer, y: integer, width: integer, height?: integer): Phaser.Textures.CanvasTexture.PixelConfig[];
+            getPixels(x: integer, y: integer, width: integer, height?: integer): PixelConfig[];
 
             /**
              * Returns the Image Data index for the given pixel in this CanvasTexture.
@@ -67867,7 +68077,7 @@ declare namespace Phaser {
              * 
              * Listen to this event from within a Scene using: `this.textures.on('addtexture', listener)`.
              */
-            var ADD: any;
+            const ADD: any;
 
             /**
              * The Texture Load Error Event.
@@ -67877,7 +68087,7 @@ declare namespace Phaser {
              * 
              * Listen to this event from within a Scene using: `this.textures.on('onerror', listener)`.
              */
-            var ERROR: any;
+            const ERROR: any;
 
             /**
              * The Texture Load Event.
@@ -67889,7 +68099,7 @@ declare namespace Phaser {
              * 
              * This event is dispatched after the [ADD]{@linkcode Phaser.Textures.Events#event:ADD} event.
              */
-            var LOAD: any;
+            const LOAD: any;
 
             /**
              * This internal event signifies that the Texture Manager is now ready and the Game can continue booting.
@@ -67898,7 +68108,7 @@ declare namespace Phaser {
              * async events before it's fully ready to carry on. When those complete the Texture Manager emits this event via the Game
              * instance, which tells the Game to carry on booting.
              */
-            var READY: any;
+            const READY: any;
 
             /**
              * The Texture Remove Event.
@@ -67910,7 +68120,7 @@ declare namespace Phaser {
              * If you have any Game Objects still using the removed texture, they will start throwing
              * errors the next time they try to render. Be sure to clear all use of the texture in this event handler.
              */
-            var REMOVE: any;
+            const REMOVE: any;
 
         }
 
@@ -73545,7 +73755,7 @@ declare namespace Phaser {
              * timeline.play();
              * ```
              */
-            var TIMELINE_COMPLETE: any;
+            const TIMELINE_COMPLETE: any;
 
             /**
              * The Timeline Loop Event.
@@ -73566,7 +73776,7 @@ declare namespace Phaser {
              * timeline.play();
              * ```
              */
-            var TIMELINE_LOOP: any;
+            const TIMELINE_LOOP: any;
 
             /**
              * The Timeline Pause Event.
@@ -73587,7 +73797,7 @@ declare namespace Phaser {
              * timeline.pause();
              * ```
              */
-            var TIMELINE_PAUSE: any;
+            const TIMELINE_PAUSE: any;
 
             /**
              * The Timeline Resume Event.
@@ -73608,7 +73818,7 @@ declare namespace Phaser {
              * timeline.resume();
              * ```
              */
-            var TIMELINE_RESUME: any;
+            const TIMELINE_RESUME: any;
 
             /**
              * The Timeline Start Event.
@@ -73628,7 +73838,7 @@ declare namespace Phaser {
              * timeline.play();
              * ```
              */
-            var TIMELINE_START: any;
+            const TIMELINE_START: any;
 
             /**
              * The Timeline Update Event.
@@ -73649,7 +73859,7 @@ declare namespace Phaser {
              * timeline.play();
              * ```
              */
-            var TIMELINE_UPDATE: any;
+            const TIMELINE_UPDATE: any;
 
         }
 
@@ -76581,7 +76791,7 @@ declare type MatterTileOptions = {
     /**
      * An existing Matter body to be used instead of creating a new one.
      */
-    body?: Phaser.Physics.Matter.Matter.Body;
+    body?: MatterJS.Body;
     /**
      * Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
      */
@@ -76632,86 +76842,6 @@ declare type CustomPluginContainer = {
      */
     plugin: Function;
 };
-
-declare namespace Phaser.Plugins.PluginCache {
-    /**
-     * Static method called directly by the Core internal Plugins.
-     * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
-     * Plugin is the object to instantiate to create the plugin
-     * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
-     * @param key A reference used to get this plugin from the plugin cache.
-     * @param plugin The plugin to be stored. Should be the core object, not instantiated.
-     * @param mapping If this plugin is to be injected into the Scene Systems, this is the property key map used.
-     * @param custom Core Scene plugin or a Custom Scene plugin? Default false.
-     */
-    function register(key: string, plugin: Function, mapping: string, custom?: boolean): void;
-
-    /**
-     * Stores a custom plugin in the global plugin cache.
-     * The key must be unique, within the scope of the cache.
-     * @param key A reference used to get this plugin from the plugin cache.
-     * @param plugin The plugin to be stored. Should be the core object, not instantiated.
-     * @param mapping If this plugin is to be injected into the Scene Systems, this is the property key map used.
-     * @param data A value to be passed to the plugin's `init` method.
-     */
-    function registerCustom(key: string, plugin: Function, mapping: string, data: any): void;
-
-    /**
-     * Checks if the given key is already being used in the core plugin cache.
-     * @param key The key to check for.
-     */
-    function hasCore(key: string): boolean;
-
-    /**
-     * Checks if the given key is already being used in the custom plugin cache.
-     * @param key The key to check for.
-     */
-    function hasCustom(key: string): boolean;
-
-    /**
-     * Returns the core plugin object from the cache based on the given key.
-     * @param key The key of the core plugin to get.
-     */
-    function getCore(key: string): CorePluginContainer;
-
-    /**
-     * Returns the custom plugin object from the cache based on the given key.
-     * @param key The key of the custom plugin to get.
-     */
-    function getCustom(key: string): CustomPluginContainer;
-
-    /**
-     * Returns an object from the custom cache based on the given key that can be instantiated.
-     * @param key The key of the custom plugin to get.
-     */
-    function getCustomClass(key: string): Function;
-
-    /**
-     * Removes a core plugin based on the given key.
-     * @param key The key of the core plugin to remove.
-     */
-    function remove(key: string): void;
-
-    /**
-     * Removes a custom plugin based on the given key.
-     * @param key The key of the custom plugin to remove.
-     */
-    function removeCustom(key: string): void;
-
-    /**
-     * Removes all Core Plugins.
-     * 
-     * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
-     * So be sure you only call this if you do not wish to run Phaser again.
-     */
-    function destroyCorePlugins(): void;
-
-    /**
-     * Removes all Custom Plugins.
-     */
-    function destroyCustomPlugins(): void;
-
-}
 
 declare type GlobalPlugin = {
     /**
@@ -76878,57 +77008,56 @@ declare interface ModelViewProjection {
 
 declare type WebGLContextCallback = (renderer: Phaser.Renderer.WebGL.WebGLRenderer)=>void;
 
-declare namespace Phaser.Scenes.ScenePlugin {
-    type SceneTransitionConfig = {
-        /**
-         * The Scene key to transition to.
-         */
-        target: string;
-        /**
-         * The duration, in ms, for the transition to last.
-         */
-        duration?: integer;
-        /**
-         * Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
-         */
-        sleep?: boolean;
-        /**
-         * Will the Scenes Input system be able to process events while it is transitioning in or out?
-         */
-        allowInput?: boolean;
-        /**
-         * Move the target Scene to be above this one before the transition starts.
-         */
-        moveAbove?: boolean;
-        /**
-         * Move the target Scene to be below this one before the transition starts.
-         */
-        moveBelow?: boolean;
-        /**
-         * This callback is invoked every frame for the duration of the transition.
-         */
-        onUpdate?: Function;
-        /**
-         * The context in which the callback is invoked.
-         */
-        onUpdateScope?: any;
-        /**
-         * An object containing any data you wish to be passed to the target Scenes init / create methods.
-         */
-        data?: any;
-    };
-
-}
+declare type SceneTransitionConfig = {
+    /**
+     * The Scene key to transition to.
+     */
+    target: string;
+    /**
+     * The duration, in ms, for the transition to last.
+     */
+    duration?: integer;
+    /**
+     * Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
+     */
+    sleep?: boolean;
+    /**
+     * Will the Scenes Input system be able to process events while it is transitioning in or out?
+     */
+    allowInput?: boolean;
+    /**
+     * Move the target Scene to be above this one before the transition starts.
+     */
+    moveAbove?: boolean;
+    /**
+     * Move the target Scene to be below this one before the transition starts.
+     */
+    moveBelow?: boolean;
+    /**
+     * This callback is invoked every frame for the duration of the transition.
+     */
+    onUpdate?: Function;
+    /**
+     * The context in which the callback is invoked.
+     */
+    onUpdateScope?: any;
+    /**
+     * An object containing any data you wish to be passed to the target Scenes init / create methods.
+     */
+    data?: any;
+};
 
 declare type EachActiveSoundCallback = (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Sound.BaseSound[])=>void;
 
-declare namespace Phaser.Sound.BaseSound {
+/**
+ * Audio sprite sound type.
+ */
+declare type AudioSpriteSound = {
     /**
-     * Audio sprite sound type.
+     * Local reference to 'spritemap' object form json file generated by audiosprite tool.
      */
-    type AudioSpriteSound = ()=>void;
-
-}
+    spritemap: object;
+};
 
 /**
  * Config object containing various sound settings.
@@ -76992,30 +77121,27 @@ declare type EachMapCallback<E> = (key: string, entry: E)=>void;
 
 declare type EachSetCallback<E> = (entry: E, index: number)=>void;
 
-declare namespace Phaser.Textures.CanvasTexture {
+/**
+ * An object containing the position and color data for a single pixel in a CanvasTexture.
+ */
+declare type PixelConfig = {
     /**
-     * An object containing the position and color data for a single pixel in a CanvasTexture.
+     * The x-coordinate of the pixel.
      */
-    type PixelConfig = {
-        /**
-         * The x-coordinate of the pixel.
-         */
-        x: integer;
-        /**
-         * The y-coordinate of the pixel.
-         */
-        y: integer;
-        /**
-         * The color of the pixel, not including the alpha channel.
-         */
-        color: integer;
-        /**
-         * The alpha of the pixel, between 0 and 1.
-         */
-        alpha: number;
-    };
-
-}
+    x: integer;
+    /**
+     * The y-coordinate of the pixel.
+     */
+    y: integer;
+    /**
+     * The color of the pixel, not including the alpha channel.
+     */
+    color: integer;
+    /**
+     * The alpha of the pixel, between 0 and 1.
+     */
+    alpha: number;
+};
 
 declare type EachTextureCallback = (texture: Phaser.Textures.Texture, ...args: any[])=>void;
 
@@ -77130,11 +77256,7 @@ declare type MapDataConfig = {
      */
     heightInPixels?: number;
     /**
-     * The pixel size of the entire tilemap.
-     */
-    widthInPixels?: number;
-    /**
-     * [description]
+     * The format of the Tilemap, as defined in Tiled.
      */
     format?: integer;
     /**
@@ -77206,15 +77328,15 @@ declare type StyleConfig = {
     /**
      * Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
      */
-    tileColor?: Color;
+    tileColor?: number;
     /**
      * Color to use for drawing a filled rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
      */
-    collidingTileColor?: Color;
+    collidingTileColor?: number;
     /**
      * Color to use for drawing a line at interesting tile faces. If set to null, interesting tile faces will not be drawn.
      */
-    faceColor?: Color;
+    faceColor?: number;
 };
 
 declare type TilemapConfig = {

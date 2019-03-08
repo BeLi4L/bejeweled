@@ -16,7 +16,19 @@ const boardSize = cellsPerRow * cellSize
 const swapDuration = 180 // ms
 const destroyDuration = 180 // ms
 
+type Cell = {
+  row: number
+  column: number
+  color: string
+  sprite: Phaser.GameObjects.Sprite
+  empty: boolean
+}
+
 export default class GameScene extends Phaser.Scene {
+  board: Cell[][]
+  selectedCell: Cell
+  moveInProgress: boolean
+
   preload () {
     gems.forEach(gem => this.load.image(gem, `assets/${gem}.png`))
   }
@@ -69,7 +81,7 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  async onPointerDown (pointer) {
+  async onPointerDown (pointer: Phaser.Input.Pointer) {
     if (this.moveInProgress) {
       return
     }
@@ -96,7 +108,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.moveInProgress = true
 
-    await this.swapCells(firstCell, secondCell)
+    this.swapCells(firstCell, secondCell)
 
     await this.moveSpritesWhereTheyBelong()
 
@@ -109,7 +121,7 @@ export default class GameScene extends Phaser.Scene {
         await this.refillBoard()
       }
     } else {
-      await this.swapCells(firstCell, secondCell)
+      this.swapCells(firstCell, secondCell)
       await this.moveSpritesWhereTheyBelong()
     }
 
@@ -219,7 +231,7 @@ export default class GameScene extends Phaser.Scene {
     this.selectedCell = null
   }
 
-  async swapCells (firstCell, secondCell) {
+  swapCells (firstCell, secondCell) {
     const firstCellCopy = { ...firstCell }
     firstCell.row = secondCell.row
     firstCell.column = secondCell.column

@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser'
 import GameScene from './GameScene'
 
-const config = {
+const config: GameConfig = {
   title: 'Bejeweled',
   width: 520,
   height: 520,
@@ -12,3 +12,9 @@ const config = {
 const game = new Phaser.Game(config)
 
 window.game = game
+
+declare global {
+  interface Window {
+    game: Phaser.Game
+  }
+}

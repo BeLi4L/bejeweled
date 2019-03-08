@@ -5,6 +5,7 @@
       "dom",
       "es2018",
       "es2018.regexp",
+      "esnext.array",
       "esnext.asynciterable"
     ],
     "module": "commonjs",
