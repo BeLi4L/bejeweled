@@ -184,10 +184,10 @@ export default class GameScene extends Phaser.Scene {
       }
     }
 
-    return Promise.all(animationsPromises)
+    await Promise.all(animationsPromises)
   }
 
-  getLowestEmptyCellBelow (cell) {
+  getLowestEmptyCellBelow (cell: Cell): Cell {
     for (let row = size - 1; row > cell.row; row--) {
       const belowCell = this.board[row][cell.column]
       if (belowCell.empty) {
@@ -205,7 +205,7 @@ export default class GameScene extends Phaser.Scene {
     )
   }
 
-  destroyCell (cell) {
+  destroyCell (cell: Cell) {
     return new Promise(resolve => {
       cell.empty = true
       this.tweens.add({
@@ -217,11 +217,11 @@ export default class GameScene extends Phaser.Scene {
     })
   }
 
-  getCellsToDestroy () {
+  getCellsToDestroy (): Cell[] {
     return this.board.flat().filter(cell => this.shouldExplode(cell))
   }
 
-  selectCell (cell) {
+  selectCell (cell: Cell) {
     this.selectedCell = cell
     this.selectedCell.sprite.setScale(1.2)
   }
@@ -231,7 +231,7 @@ export default class GameScene extends Phaser.Scene {
     this.selectedCell = null
   }
 
-  swapCells (firstCell, secondCell) {
+  swapCells (firstCell: Cell, secondCell: Cell) {
     const firstCellCopy = { ...firstCell }
     firstCell.row = secondCell.row
     firstCell.column = secondCell.column
@@ -242,15 +242,15 @@ export default class GameScene extends Phaser.Scene {
     this.board[secondCell.row][secondCell.column] = secondCell
   }
 
-  boardShouldExplode () {
+  boardShouldExplode (): boolean {
     return this.board.some(row => row.some(cell => this.shouldExplode(cell)))
   }
 
-  shouldExplode (cell) {
+  shouldExplode (cell: Cell): boolean {
     return this.shouldExplodeHorizontally(cell) || this.shouldExplodeVertically(cell)
   }
 
-  shouldExplodeHorizontally ({ row, column }) {
+  shouldExplodeHorizontally ({ row, column }: Cell): boolean {
     const explosionThreshold = 3
 
     for (let startPosition = column - explosionThreshold + 1; startPosition <= column; startPosition++) {
@@ -271,7 +271,7 @@ export default class GameScene extends Phaser.Scene {
     return false
   }
 
-  shouldExplodeVertically ({ row, column }) {
+  shouldExplodeVertically ({ row, column }: Cell): boolean {
     const explosionThreshold = 3
 
     for (let startPosition = row - explosionThreshold + 1; startPosition <= row; startPosition++) {
@@ -292,20 +292,20 @@ export default class GameScene extends Phaser.Scene {
     return false
   }
 
-  getCellAt (pointer) {
+  getCellAt (pointer: Phaser.Input.Pointer): Cell {
     const row = Math.floor(pointer.y / cellSize)
     const column = Math.floor(pointer.x / cellSize)
 
     return this.board[row][column]
   }
 
-  cellsAreNeighbours (cell1, cell2) {
+  cellsAreNeighbours (cell1: Cell, cell2: Cell): boolean {
     return (cell1.row === cell2.row && (cell1.column === cell2.column + 1 || cell1.column === cell2.column - 1)) ||
       (cell1.column === cell2.column && (cell1.row === cell2.row + 1 || cell1.row === cell2.row - 1))
   }
 }
 
-function createEmptyBoard (size) {
+function createEmptyBoard (size: number): Cell[][] {
   const board = new Array(size)
   for (let row = 0; row < size; row++) {
     board[row] = new Array(size)
