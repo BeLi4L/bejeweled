@@ -74955,37 +74955,37 @@ declare namespace Phaser {
                  * ```
                  * @param matrix The array to check.
                  */
-                function CheckMatrix(matrix: any[]): boolean;
+                function CheckMatrix<T>(matrix: T[][]): boolean;
 
                 /**
                  * Generates a string (which you can pass to console.log) from the given Array Matrix.
                  * @param matrix A 2-dimensional array.
                  */
-                function MatrixToString(matrix: any[]): string;
+                function MatrixToString<T>(matrix: T[][]): string;
 
                 /**
                  * Reverses the columns in the given Array Matrix.
                  * @param matrix The array matrix to reverse the columns for.
                  */
-                function ReverseColumns(matrix: any[]): any[];
+                function ReverseColumns<T>(matrix: T[][]): T[][];
 
                 /**
                  * Reverses the rows in the given Array Matrix.
                  * @param matrix The array matrix to reverse the rows for.
                  */
-                function ReverseRows(matrix: any[]): any[];
+                function ReverseRows<T>(matrix: T[][]): T[][];
 
                 /**
                  * Rotates the array matrix 180 degrees.
                  * @param matrix The array to rotate.
                  */
-                function Rotate180(matrix: any[]): any[];
+                function Rotate180<T>(matrix: T[][]): T[][];
 
                 /**
                  * Rotates the array matrix to the left (or 90 degrees)
                  * @param matrix The array to rotate.
                  */
-                function RotateLeft(matrix: any[]): any[];
+                function RotateLeft<T>(matrix: T[][]): T[][];
 
                 /**
                  * Rotates the array matrix based on the given rotation value.
@@ -74997,13 +74997,13 @@ declare namespace Phaser {
                  * @param matrix The array to rotate.
                  * @param direction The amount to rotate the matrix by. Default 90.
                  */
-                function RotateMatrix(matrix: any[], direction?: number | string): any[];
+                function RotateMatrix<T>(matrix: T[][], direction?: number | string): T[][];
 
                 /**
                  * Rotates the array matrix to the left (or -90 degrees)
                  * @param matrix The array to rotate.
                  */
-                function RotateRight(matrix: any[]): any[];
+                function RotateRight<T>(matrix: T[][]): T[][];
 
                 /**
                  * Transposes the elements of the given matrix (array of arrays).
@@ -75011,7 +75011,7 @@ declare namespace Phaser {
                  * The transpose of a matrix is a new matrix whose rows are the columns of the original.
                  * @param array The array matrix to transpose.
                  */
-                function TransposeMatrix(array: any[]): any[];
+                function TransposeMatrix<T>(array: T[][]): T[][];
 
             }
 
