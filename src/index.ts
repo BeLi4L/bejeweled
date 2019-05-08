@@ -17,8 +17,8 @@ const config: GameConfig = {
   title: 'Bejeweled',
   width: BOARD_SIZE + MENU_WIDTH,
   height: BOARD_SIZE,
-  scene: [MenuScene, GameScene],
-  disableContextMenu: true
+  parent: document.getElementsByClassName('CanvasContainer')[0] as HTMLElement,
+  scene: [MenuScene, GameScene]
 }
 
 const game = new Phaser.Game(config)

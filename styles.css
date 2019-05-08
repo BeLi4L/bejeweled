@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background-color: #e7e9eb;
+  font-family: Open Sans, Lato, sans-serif;
+}
+
+.Header {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #252e38;
+  box-shadow: 0 0 25px 0 #131c25;
+}
+
+.Header-title {
+  color: white;
+  font-size: 25px;
+}
+
+.CanvasContainer {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
