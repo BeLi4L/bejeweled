@@ -1,5 +1,11 @@
 import * as Phaser from 'phaser'
+
+import {
+  BOARD_SIZE,
+  MENU_WIDTH
+} from './constants'
 import GameScene from './GameScene'
+import MenuScene from './MenuScene'
 
 declare global {
   interface Window {
@@ -9,9 +15,9 @@ declare global {
 
 const config: GameConfig = {
   title: 'Bejeweled',
-  width: 520,
-  height: 520,
-  scene: GameScene,
+  width: BOARD_SIZE + MENU_WIDTH,
+  height: BOARD_SIZE,
+  scene: [MenuScene, GameScene],
   disableContextMenu: true
 }
 

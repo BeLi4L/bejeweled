@@ -1,5 +1,12 @@
 import * as Phaser from 'phaser'
 
+import {
+  BOARD_SIZE,
+  CELL_SIZE,
+  MENU_WIDTH,
+  NUMBER_OF_CELLS_PER_ROW as size
+} from './constants'
+
 const gems = [
   'blue',
   'green',
@@ -9,10 +16,10 @@ const gems = [
   'yellow'
 ]
 
-const cellSize = 65
-const cellsPerRow = 8
-const size = cellsPerRow
-const boardSize = cellsPerRow * cellSize
+/**
+ * Number of cells required to trigger an explosion
+ */
+const explosionThreshold = 3
 const swapDuration = 180 // ms
 const destroyDuration = 180 // ms
 
@@ -28,27 +35,39 @@ export default class GameScene extends Phaser.Scene {
   board: Cell[][]
   selectedCell: Cell
   moveInProgress: boolean
+  score: number
+
+  constructor () {
+    super({
+      key: 'GameScene',
+      active: true
+    })
+  }
 
   preload () {
     gems.forEach(gem => this.load.image(gem, `assets/${gem}.png`))
   }
 
   create () {
+    this.cameras.main.setPosition(MENU_WIDTH, 0)
+
     this.createBackground()
 
     this.initBoard()
+
+    this.setScore(0)
 
     this.input.on('pointerdown', this.onPointerDown, this)
   }
 
   createBackground () {
     this.add.grid(
-      boardSize / 2, // x
-      boardSize / 2, // y
-      boardSize, // width
-      boardSize, // height
-      cellSize, // cellWidth
-      cellSize // cellHeight
+      BOARD_SIZE / 2, // x
+      BOARD_SIZE / 2, // y
+      BOARD_SIZE, // width
+      BOARD_SIZE, // height
+      CELL_SIZE, // cellWidth
+      CELL_SIZE // cellHeight
     )
       .setFillStyle(0x252e38)
       .setAltFillStyle(0x212933)
@@ -74,11 +93,16 @@ export default class GameScene extends Phaser.Scene {
         cell.color = Phaser.Math.RND.pick(possibleColors)
         cell.empty = false
 
-        const x = column * cellSize + cellSize / 2
-        const y = row * cellSize + cellSize / 2
+        const x = column * CELL_SIZE + CELL_SIZE / 2
+        const y = row * CELL_SIZE + CELL_SIZE / 2
         cell.sprite = this.add.sprite(x, y, cell.color).setInteractive()
       }
     }
+  }
+
+  setScore (score: number) {
+    this.score = score
+    this.registry.set('score', score)
   }
 
   async onPointerDown (pointer: Phaser.Input.Pointer) {
@@ -113,12 +137,19 @@ export default class GameScene extends Phaser.Scene {
     await this.moveSpritesWhereTheyBelong()
 
     if (this.boardShouldExplode()) {
+      let cascades = 0
       while (this.boardShouldExplode()) {
+        const chains = this.getExplodingChains()
+
         await this.destroyCells()
+
+        this.setScore(this.score + this.computeScore(chains, cascades))
 
         await this.makeCellsFall()
 
         await this.refillBoard()
+
+        cascades++
       }
     } else {
       this.swapCells(firstCell, secondCell)
@@ -126,6 +157,12 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.moveInProgress = false
+  }
+
+  computeScore (chains: Cell[][], cascades: number): number {
+    return chains
+      .map(chain => 50 * (chain.length + 1 - explosionThreshold))
+      .reduce((score, chainScore) => score + chainScore, 0) * (cascades + 1)
   }
 
   async makeCellsFall () {
@@ -154,8 +191,8 @@ export default class GameScene extends Phaser.Scene {
         cell.color = Phaser.Math.RND.pick(gems)
         cell.empty = false
 
-        const x = column * cellSize + cellSize / 2
-        const y = (row - numberOfEmptyCells) * cellSize + cellSize / 2
+        const x = column * CELL_SIZE + CELL_SIZE / 2
+        const y = (row - numberOfEmptyCells) * CELL_SIZE + CELL_SIZE / 2
         cell.sprite = this.add.sprite(x, y, cell.color).setInteractive()
       }
     }
@@ -168,8 +205,8 @@ export default class GameScene extends Phaser.Scene {
 
     for (const cell of cells) {
       const sprite = cell.sprite
-      const expectedX = cell.column * cellSize + cellSize / 2
-      const expectedY = cell.row * cellSize + cellSize / 2
+      const expectedX = cell.column * CELL_SIZE + CELL_SIZE / 2
+      const expectedY = cell.row * CELL_SIZE + CELL_SIZE / 2
       if (sprite.x !== expectedX || sprite.y !== expectedY) {
         const animationPromise = new Promise(resolve => {
           this.tweens.add({
@@ -195,6 +232,35 @@ export default class GameScene extends Phaser.Scene {
       }
     }
     return null
+  }
+
+  getExplodingChains (): Cell[][] {
+    const rows = this.board
+    const columns = Phaser.Utils.Array.Matrix.TransposeMatrix(this.board)
+
+    return [...rows, ...columns].flatMap(line => this.getExplodingChainsOnLine(line))
+  }
+
+  getExplodingChainsOnLine (line: Cell[]): Cell[][] {
+    const chains: Cell[][] = []
+
+    let i = 0
+    while (i < line.length) {
+      let j = i + 1
+      while (j < line.length && line[j].color === line[i].color) {
+        j++
+      }
+
+      const chain = line.slice(i, j)
+      if (chain.length >= explosionThreshold) {
+        chains.push(chain)
+        i = j
+      } else {
+        i++
+      }
+    }
+
+    return chains
   }
 
   async destroyCells () {
@@ -251,8 +317,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   shouldExplodeHorizontally ({ row, column }: Cell): boolean {
-    const explosionThreshold = 3
-
     for (let startPosition = column - explosionThreshold + 1; startPosition <= column; startPosition++) {
       const endPosition = startPosition + explosionThreshold - 1
       if (startPosition >= 0 && endPosition < size) {
@@ -272,8 +336,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   shouldExplodeVertically ({ row, column }: Cell): boolean {
-    const explosionThreshold = 3
-
     for (let startPosition = row - explosionThreshold + 1; startPosition <= row; startPosition++) {
       const endPosition = startPosition + explosionThreshold - 1
       if (startPosition >= 0 && endPosition < size) {
@@ -293,8 +355,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   getCellAt (pointer: Phaser.Input.Pointer): Cell {
-    const row = Math.floor(pointer.y / cellSize)
-    const column = Math.floor(pointer.x / cellSize)
+    const row = Math.floor(pointer.worldY / CELL_SIZE)
+    const column = Math.floor(pointer.worldX / CELL_SIZE)
 
     return this.board[row][column]
   }
