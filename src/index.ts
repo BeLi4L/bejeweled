@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-const config: GameConfig = {
+const config: Phaser.Types.Core.GameConfig = {
   title: 'Bejeweled',
   width: BOARD_SIZE + MENU_WIDTH,
   height: BOARD_SIZE,
