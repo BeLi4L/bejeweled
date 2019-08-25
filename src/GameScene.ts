@@ -62,6 +62,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.setScore(0)
 
+    // TODO: clicking on "new game" triggers this...
     this.input.on('pointerdown', this.onPointerDown, this)
 
     this.registry.events.on('NEW_GAME', () => {
@@ -185,6 +186,8 @@ export default class GameScene extends Phaser.Scene {
         await this.makeCellsFall()
 
         await this.refillBoard()
+
+        // TODO: add score in leaderboard
 
         cascades++
       }
@@ -410,6 +413,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   shouldExplodeHorizontally ({ row, column }: Cell): boolean {
+    // TODO: optim: expand left/right and return right - left >= threshold
     for (let startPosition = column - explosionThreshold + 1; startPosition <= column; startPosition++) {
       const endPosition = startPosition + explosionThreshold - 1
       if (startPosition >= 0 && endPosition < size) {

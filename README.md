@@ -15,9 +15,18 @@ Open http://localhost:8000 to play the game ;)
 
 ## Backlog
 
-- add score
-- add sounds/score on sprites (like candy crush)
-- detect game over: no move can be done => replay button
+- bug: new game: some old gems are still here
+- bug: new game: click propagates from the popup to the game
+
+- hint button: random.pick(winningMoves)
+
+- Game & Menu extends Zone/Container/Scene?
+
+- add local leaderboard
+- maybe extract Board/Cell classes?
+- explosion animation: shrink, like bejeweled 1
+- improve selected gem: add 4 white corners ? and also on the 2nd gem
+- add sounds/score on sprites (like candy crush, or try the original Bejeweled 1 sound) + cascade sounds (à la dota & co: Godlike, Monster kill...)
 - use Smash sprites (add a toggle button to switch?)
-- hints
-- local leaderboard
+- add screenshot in README
+- swipe
