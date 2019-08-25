@@ -6,6 +6,7 @@ import {
   MENU_WIDTH,
   NUMBER_OF_CELLS_PER_ROW as size
 } from './constants'
+import { ConfirmPopup } from './ConfirmPopup'
 
 const gems = [
   'blue',
@@ -62,6 +63,32 @@ export default class GameScene extends Phaser.Scene {
     this.setScore(0)
 
     this.input.on('pointerdown', this.onPointerDown, this)
+
+    this.registry.events.on('NEW_GAME', () => {
+      this.handleStartNewGame()
+    })
+  }
+
+  handleStartNewGame () {
+    if (this.isGameOver) {
+      this.startNewGame()
+    } else {
+      const confirmPopup = new ConfirmPopup(this, 0, 0, 'Are you sure you want to start a new game? You will lose current progress!', () => {
+        this.startNewGame()
+      })
+      Phaser.Display.Align.In.Center(confirmPopup, this.zone)
+    }
+  }
+
+  startNewGame () {
+    this.isGameOver = false
+    this.destroyBoard()
+    this.initBoard()
+    this.setScore(0)
+  }
+
+  destroyBoard () {
+    this.board.forEach(row => row.forEach(cell => cell.sprite.destroy()))
   }
 
   createBackground () {
