@@ -36,6 +36,9 @@ export default class GameScene extends Phaser.Scene {
   selectedCell: Cell
   moveInProgress: boolean
   score: number
+  zone: Phaser.GameObjects.Zone
+  isGameOver: boolean
+  gameOverScreen: Phaser.GameObjects.Container
 
   constructor () {
     super({
@@ -50,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
 
   create () {
     this.cameras.main.setPosition(MENU_WIDTH, 0)
+    this.zone = this.add.zone(0, 0, BOARD_SIZE, BOARD_SIZE).setOrigin(0)
 
     this.createBackground()
 
@@ -151,12 +155,68 @@ export default class GameScene extends Phaser.Scene {
 
         cascades++
       }
+      const winningMoves = this.getWinningMoves()
+      console.log(`${winningMoves.length} winning moves`)
+      if (winningMoves.length === 0) {
+        this.gameOver()
+      }
     } else {
       this.swapCells(firstCell, secondCell)
       await this.moveSpritesWhereTheyBelong()
     }
 
     this.moveInProgress = false
+  }
+
+  getWinningMoves (): { cell1: Cell, cell2: Cell }[] {
+    const winningMoves: { cell1: Cell, cell2: Cell }[] = []
+
+    for (let row = 0; row < size - 1; row++) {
+      for (let column = 0; column < size - 1; column++) {
+        const cell = this.board[row][column]
+        const right = this.board[row][column + 1]
+        const down = this.board[row + 1][column]
+
+        // Swap right
+        this.swapCells(cell, right)
+        if (this.boardShouldExplode()) {
+          winningMoves.push({ cell1: cell, cell2: right })
+        }
+        this.swapCells(cell, right)
+
+        // Swap down
+        this.swapCells(cell, down)
+        if (this.boardShouldExplode()) {
+          winningMoves.push({ cell1: cell, cell2: down })
+        }
+        this.swapCells(cell, down)
+      }
+    }
+
+    return winningMoves
+  }
+
+  gameOver () {
+    this.isGameOver = true
+
+    const gameOverBackground = this.add.rectangle(0, 0, this.zone.width, this.zone.height)
+      .setOrigin(0)
+      .setFillStyle(0x000000, 0.5)
+
+    const gameOverText = this.add.text(0, 0, 'Game over')
+      .setOrigin(0.5)
+      .setFontFamily('Arial')
+      .setFontSize(35)
+      .setColor('white')
+
+    this.gameOverScreen = this.add.container(0, 0)
+      .add(gameOverBackground)
+      .add(gameOverText)
+      .setDepth(1)
+
+    Phaser.Display.Align.In.Center(gameOverText, gameOverBackground)
+
+    // TODO: disable click & remove gameover screen on new game
   }
 
   computeScore (chains: Cell[][], cascades: number): number {
