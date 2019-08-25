@@ -137,6 +137,12 @@ export default class GameScene extends Phaser.Scene {
   }
 
   async onPointerDown (pointer: Phaser.Input.Pointer) {
+    // console.log('pointer down', { ...pointer })
+
+    if (pointer.camera !== this.cameras.main) {
+      console.log('ignore other cameras')
+      return
+    }
     if (this.moveInProgress) {
       return
     }
